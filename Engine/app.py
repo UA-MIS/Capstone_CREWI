@@ -8,7 +8,7 @@ app = Flask(__name__)
 @app.route('/hello/', methods=['GET', 'POST'])
 #I don't think the name of the function matters? I have no clue tbh, I guess they don't matter in .NET either...
 def welcome():
-    return "Hello World!"
+    return "update"
 
 
 
