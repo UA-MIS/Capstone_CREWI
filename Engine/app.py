@@ -1,6 +1,6 @@
 from flask import Flask, request, jsonify
+from DfaDatabase import DfaDatabase
 from Models import RecommendationRequest
-from dotenv import load_dotenv
 
 import os
 
@@ -18,15 +18,20 @@ def recommendItem():
     # request.json will contain the request body; this saves it into a RecommendationRequest object
     # will return a 400 if the request body formatting is bad
     userRequest = RecommendationRequest.RecommendationRequest(request.json)
-    # os.environ['DFA_Host'] = 'pfw0ltdr46khxib3.cbetxkdyhwsb.us-east-1.rds.amazonaws.com'
-    load_dotenv()
-    print(os.environ.get('DFA_HOST'))
-    #for testing, just returning the rec request as-is
+    
     return jsonify({
-        "username": userRequest.username,
-        "time": userRequest.time,
-        "timeSlot": userRequest.timeSlot,
-        "location": userRequest.location
+        "request": {
+            "username": userRequest.username,
+            "time": userRequest.time,
+            "timeSlot": userRequest.timeSlot,
+            "location": userRequest.location,
+        },
+        "database": {
+            "host": os.environ.get('DFA_HOST'),
+            "username": os.environ.get('DFA_Username'),
+            "password": os.environ.get('DFA_Password'),
+            "database": os.environ.get('DFA_Database')
+        }
     })
 
 #from the article "This line ensures that our Flask app runs only when it is executed in the main file and not when it is imported in some other file"
