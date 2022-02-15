@@ -1,5 +1,8 @@
 from flask import Flask, request, jsonify
 from Models import RecommendationRequest
+from dotenv import load_dotenv
+
+import os
 
 # initializes the Flask app
 app = Flask(__name__)
@@ -15,7 +18,9 @@ def recommendItem():
     # request.json will contain the request body; this saves it into a RecommendationRequest object
     # will return a 400 if the request body formatting is bad
     userRequest = RecommendationRequest.RecommendationRequest(request.json)
-    
+    # os.environ['DFA_Host'] = 'pfw0ltdr46khxib3.cbetxkdyhwsb.us-east-1.rds.amazonaws.com'
+    load_dotenv()
+    print(os.environ.get('DFA_HOST'))
     #for testing, just returning the rec request as-is
     return jsonify({
         "username": userRequest.username,
