@@ -11,13 +11,12 @@ export default class LoginComponent extends Component {
     }
     render() {
         return(
-                <div>
-                    {/* we use a non-unique ID here, so be careful about making multiple login components */}
-                    {/* this will call the updateParent method onChange, which is just whenever the input value changes */}
-                    <span>Enter Username: </span>
-                    <input id="login" type="text" onChange={this.updateParent}></input>
-                    <button onClick={this.loginClick}>Login</button>
-                </div>
+            <div>
+                {/* we use a non-unique ID here, so be careful about making multiple login components */}
+                {/* this will call the updateParent method onChange, which is just whenever the input value changes */}
+                <input id="login" type="text"></input>
+                <button onClick={this.updateParent}>Login</button>
+            </div>
         )
     }
 
@@ -33,5 +32,4 @@ export default class LoginComponent extends Component {
         //updated as changes occur
         this.props.updateState(newUsername);
     }
-
 }
