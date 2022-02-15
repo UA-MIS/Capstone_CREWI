@@ -3,7 +3,12 @@ import React, { Component } from 'react';
 //this will be our login component; it needs to let the user enter a username and password (not a priority at the moment),
 //validate the user (will do later), and send the username to the widget (which is what we're looking at now)
 export default class LoginComponent extends Component {
-
+    loginClick = () => {
+        this.setState(state => ({
+            //counter: state.counter + 1,
+            time: this.updateParent()
+        }))
+    }
     render() {
         return(
             <div>

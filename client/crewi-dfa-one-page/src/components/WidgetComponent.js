@@ -40,16 +40,18 @@ export default class WidgetComponent extends Component {
         return(
             // this is where the HTML for the widget should be written
             <div>
-                <span>The Widget goes here</span>
+                <hr></hr>
+                <span>Username: </span>
+                <span>{this.props.username}</span>
                 <br></br>
                 <hr></hr>
                 {/* this will show the username of the main component; props can be used to grab parent state info */}
                 {/* since the parent changing would mean the child is re-rendered, this is updated dynamically (useEffect and some of the hooks work a little differently, refer to the Reddit widget stuff for details) */}
-                <span>{this.props.username}</span>
                 {/* the same dynamic stuff is true for time */}
                 <span>Time: {time}</span>
                 {/* when this button is clicked, it'll call the function that increments counter but also updates time */}
                 {/* <button onClick={this.displayClick}>Click Me (Clicked {this.state.counter} times)</button> */}
+
             </div>
         )
     }
