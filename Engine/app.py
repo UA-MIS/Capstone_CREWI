@@ -1,5 +1,8 @@
 from flask import Flask, request, jsonify
+from DfaDatabase import DfaDatabase
 from Models import RecommendationRequest
+
+import os
 
 # initializes the Flask app
 app = Flask(__name__)
@@ -16,12 +19,19 @@ def recommendItem():
     # will return a 400 if the request body formatting is bad
     userRequest = RecommendationRequest.RecommendationRequest(request.json)
     
-    #for testing, just returning the rec request as-is
     return jsonify({
-        "username": userRequest.username,
-        "time": userRequest.time,
-        "timeSlot": userRequest.timeSlot,
-        "location": userRequest.location
+        "request": {
+            "username": userRequest.username,
+            "time": userRequest.time,
+            "timeSlot": userRequest.timeSlot,
+            "location": userRequest.location,
+        },
+        "database": {
+            "host": os.environ.get('DFA_HOST'),
+            "username": os.environ.get('DFA_Username'),
+            "password": os.environ.get('DFA_Password'),
+            "database": os.environ.get('DFA_Database')
+        }
     })
 
 #from the article "This line ensures that our Flask app runs only when it is executed in the main file and not when it is imported in some other file"
