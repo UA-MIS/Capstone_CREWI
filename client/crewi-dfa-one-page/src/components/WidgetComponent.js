@@ -23,12 +23,23 @@ export default class WidgetComponent extends Component {
 
     //for now, just always use arrow functions for click behaviors
     //when the counter is clicked, increment the counter by one and load the time
-    counterClick = () => {
-        this.setState(state => ({
-            counter: state.counter + 1,
-            time: this.loadCurrentTime()
-        }))
+    
+    displayClick = () => {
+        if (this.props.username !== "")
+        {
+            this.setState(state => ({
+                counter: state.counter + 1,
+                time: this.loadCurrentTime()
+            }))
+        }
     }
+
+    // counterClick = () => {
+    //         this.setState(state => ({
+    //             counter: state.counter + 1,
+    //             time: this.loadCurrentTime()
+    //         }))
+    // }
 
     render() {
         return(
@@ -43,7 +54,7 @@ export default class WidgetComponent extends Component {
                 {/* the same dynamic stuff is true for time */}
                 <span>Time: {this.state.time}</span>
                 {/* when this button is clicked, it'll call the function that increments counter but also updates time */}
-                <button onClick={this.counterClick}>Click Me (Clicked {this.state.counter} times)</button>
+                <button onClick={this.displayClick}>Click Me (Clicked {this.state.counter} times)</button>
             </div>
         )
     }
