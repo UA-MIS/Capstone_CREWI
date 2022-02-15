@@ -6,10 +6,10 @@ import React, { Component } from 'react';
 export default class WidgetComponent extends Component {
 
     //this is the child state of the widget; my understanding is that only children of this one could access it
-    state = {
-        counter: 0,
-        time: ""
-    }
+    // state = {
+    //     counter: 0,
+    //     time: ""
+    // }
 
     //our first attempt at loading in time; it works, but we should probably reformat the time a little
     loadCurrentTime = () => {
@@ -23,17 +23,6 @@ export default class WidgetComponent extends Component {
 
     //for now, just always use arrow functions for click behaviors
     //when the counter is clicked, increment the counter by one and load the time
-    
-    displayClick = () => {
-        if (this.props.username !== "")
-        {
-            this.setState(state => ({
-                counter: state.counter + 1,
-                time: this.loadCurrentTime()
-            }))
-        }
-    }
-
     // counterClick = () => {
     //         this.setState(state => ({
     //             counter: state.counter + 1,
@@ -42,6 +31,12 @@ export default class WidgetComponent extends Component {
     // }
 
     render() {
+        console.log("dog");
+
+        if(this.props.username !== "")
+        {
+            var time = this.loadCurrentTime();
+        }
         return(
             // this is where the HTML for the widget should be written
             <div>
@@ -52,9 +47,9 @@ export default class WidgetComponent extends Component {
                 {/* since the parent changing would mean the child is re-rendered, this is updated dynamically (useEffect and some of the hooks work a little differently, refer to the Reddit widget stuff for details) */}
                 <span>{this.props.username}</span>
                 {/* the same dynamic stuff is true for time */}
-                <span>Time: {this.state.time}</span>
+                <span>Time: {time}</span>
                 {/* when this button is clicked, it'll call the function that increments counter but also updates time */}
-                <button onClick={this.displayClick}>Click Me (Clicked {this.state.counter} times)</button>
+                {/* <button onClick={this.displayClick}>Click Me (Clicked {this.state.counter} times)</button> */}
             </div>
         )
     }
