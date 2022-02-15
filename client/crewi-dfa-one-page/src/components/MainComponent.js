@@ -7,7 +7,7 @@ export default class MainComponent extends Component {
 
     //this is the top-level state; we can put more stuff in here as needed
     state = {
-        username: "Sam"
+        username: ""
     }
 
     //whenever this method is called, set the state's username to newUsername
