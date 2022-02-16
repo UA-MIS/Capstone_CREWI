@@ -7,6 +7,9 @@ import mysql.connector
 class DfaDatabase:
     def loadItems():
         try:
+            # loading environment data
+            load_dotenv()
+
             # opening the connection; may want to look into using a connection string dictionary later
             myConnection = mysql.connector.connect(
                 host = os.environ.get('DFA_Host'),

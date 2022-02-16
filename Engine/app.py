@@ -18,7 +18,7 @@ def recommendItem():
     # request.json will contain the request body; this saves it into a RecommendationRequest object
     # will return a 400 if the request body formatting is bad
     userRequest = RecommendationRequest.RecommendationRequest(request.json)
-    
+    DfaDatabase.loadItems()
     return jsonify({
         "request": {
             "username": userRequest.username,
