@@ -14,11 +14,24 @@ export default class WidgetComponent extends Component {
     //our first attempt at loading in time; it works, but we should probably reformat the time a little
     loadCurrentTime = () => {
         // get a new date (locale machine date time)
-        var date = new Date();
-        // get the time as a string
-        var localTime = date.toLocaleTimeString();
+        // var date = new Date();
+        // // get the time as a string
+        // var localTime = date.toLocaleTimeString();
 
-        return date + " " + localTime;
+        // return date + " " + localTime;
+        Number.prototype.padLeft = function(base,chr){
+            var  len = (String(base || 10).length - String(this).length)+1;
+            return len > 0? new Array(len).join(chr || '0')+this : this;
+        }
+        //returns the date in YYYY-MM-DD HH:MM:SS format
+        var d = new Date(),
+        dformat = [d.getFullYear(),
+                (d.getMonth()+1).padLeft(),
+               d.getDate().padLeft()].join('-') +' ' +
+              [d.getHours().padLeft(),
+               d.getMinutes().padLeft(),
+               d.getSeconds().padLeft()].join(':');
+        return dformat;
     }
 
     //for now, just always use arrow functions for click behaviors
