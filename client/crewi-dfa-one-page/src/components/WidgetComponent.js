@@ -44,12 +44,41 @@ export default class WidgetComponent extends Component {
     // }
 
     render() {
-        console.log("dog");
-
-        if(this.props.username !== "")
+        var time = "";
+        try{
+            if(this.props.username !== "")
         {
-            var time = this.loadCurrentTime();
+            throw 'No Time';
+            time = this.loadCurrentTime();
+        } 
         }
+        catch{
+            time = "Error";
+            if(time !== this.loadCurrentTime)
+                return(
+                <div>
+                <hr></hr>
+                <span>Username: </span>
+                <span>{this.props.username}</span>
+                <br></br>
+                <hr></hr>
+              
+                {/* this will show the username of the main component; props can be used to grab parent state info */}
+                {/* since the parent changing would mean the child is re-rendered, this is updated dynamically (useEffect and some of the hooks work a little differently, refer to the Reddit widget stuff for details) */}
+                {/* the same dynamic stuff is true for time */}
+                <span>Time: {time}</span>
+                {/* when this button is clicked, it'll call the function that increments counter but also updates time */}
+                {/* <button onClick={this.displayClick}>Click Me (Clicked {this.state.counter} times)</button> */}
+                <br/>
+                <hr/>
+                <span>We couldn't load your current time please select an option below:</span>
+                <br/>
+                <input type="radio" value="Morning" name="dayPart" /> Morning
+                <input type="radio" value="Noon" name="dayPart" /> Noon
+                <input type="radio" value="Afternoon" name="dayPart" /> Afternoon
+                </div>
+                )
+            }
         return(
             // this is where the HTML for the widget should be written
             <div>
@@ -58,6 +87,7 @@ export default class WidgetComponent extends Component {
                 <span>{this.props.username}</span>
                 <br></br>
                 <hr></hr>
+              
                 {/* this will show the username of the main component; props can be used to grab parent state info */}
                 {/* since the parent changing would mean the child is re-rendered, this is updated dynamically (useEffect and some of the hooks work a little differently, refer to the Reddit widget stuff for details) */}
                 {/* the same dynamic stuff is true for time */}
@@ -69,3 +99,4 @@ export default class WidgetComponent extends Component {
         )
     }
 }
+    
