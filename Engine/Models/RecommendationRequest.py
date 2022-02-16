@@ -1,11 +1,18 @@
 from flask import abort
+import datetime
 
 class RecommendationRequest:
     def __init__(self, userRequest):
         #if the user's request is in the right format, it'll make the rec request object
         try:
             self.username = userRequest["username"]
-            self.time = userRequest["time"]
+            
+            # if time is missing, proceed without it; this happens if the provided timeslot scenario
+            if userRequest["time"] != "":
+                self.time = datetime.datetime.strptime(userRequest["time"], '%Y-%m-%d %H:%M:%S')
+            else:
+                self.time = ""
+
             self.timeSlot = userRequest["timeSlot"]
             self.location = userRequest["location"]
         except:

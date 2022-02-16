@@ -1,6 +1,6 @@
 from flask import Flask, request, jsonify
 from DfaDatabase import DfaDatabase
-from Models import RecommendationRequest
+from Models import RecommendationRequest, RecommendationEngine
 
 import os
 
@@ -18,7 +18,14 @@ def recommendItem():
     # request.json will contain the request body; this saves it into a RecommendationRequest object
     # will return a 400 if the request body formatting is bad
     userRequest = RecommendationRequest.RecommendationRequest(request.json)
-    DfaDatabase.loadItems()
+    
+    # making the engine; these are functionally static methods I figured instance methods would be a little clearer
+    engine = RecommendationEngine.RecommendationEngine()
+    
+    # setting the time slot; even if its provided, this will confirm it (so if there's a logical conflict time will be prioritized)
+    userRequest.timeSlot = engine.parseRequestTime(userRequest)
+
+    # just for testing purposes; at the end, this will just return the rec
     return jsonify({
         "request": {
             "username": userRequest.username,
