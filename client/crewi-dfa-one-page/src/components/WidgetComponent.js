@@ -6,10 +6,15 @@ import React, { Component } from 'react';
 export default class WidgetComponent extends Component {
 
     //this is the child state of the widget; my understanding is that only children of this one could access it
-    state = {
-        Morning: "Morning",
-        Noon: "Noon",
-        Afternoon: "Afternoon"
+
+    constructor() {
+        super();
+        this.state = {
+            name: "React"
+        };
+        this.onValueChange = this.onValueChange.bind(this);
+        this.formSubmit = this.formSubmit.bind(this);
+
     }
 
     //our first attempt at loading in time; it works, but we should probably reformat the time a little
@@ -44,6 +49,17 @@ export default class WidgetComponent extends Component {
     //         }))
     // }
 
+    onValueChange(event) {
+        this.setState({
+            selectedOption: event.target.value
+        });
+    }
+
+    formSubmit(event) {
+        event.preventDefault();
+        console.log(this.state.selectedOption)
+    }
+
     render() {
         var time = "";
         try{
@@ -56,67 +72,76 @@ export default class WidgetComponent extends Component {
         catch{
             time = "Error";
             if(time !== this.loadCurrentTime)
-                return(
-                <div>
-                <hr></hr>
-                <span>Username: </span>
-                <span>{this.props.username}</span>
-                <br></br>
-                <hr></hr>
-              
-                {/* this will show the username of the main component; props can be used to grab parent state info */}
-                {/* since the parent changing would mean the child is re-rendered, this is updated dynamically (useEffect and some of the hooks work a little differently, refer to the Reddit widget stuff for details) */}
-                {/* the same dynamic stuff is true for time */}
-                <span>Time: {time}</span>
-                {/* when this button is clicked, it'll call the function that increments counter but also updates time */}
-                {/* <button onClick={this.displayClick}>Click Me (Clicked {this.state.counter} times)</button> */}
-                <br/>
-                <hr/>
-                <span>We couldn't load your current time please select an option below:</span>
-                <br/>
-                <form onSubmit={this.formSubmit}>
-                    <div className="radio">
-                        <label>
-                            <input
-                                type="radio"
-                                value="Morning"
-                                checked={this.state.selectedOption === "Morning"}
-                                onChange={this.onValueChange}
-                            />
-                            Morning
-                        </label>
+
+            {
+                return (
+                    <div>
+                        <hr></hr>
+                        <span>Username: </span>
+                        <span>{this.props.username}</span>
+                        <br></br>
+                        <hr></hr>
+
+                        {/* this will show the username of the main component; props can be used to grab parent state info */}
+                        {/* since the parent changing would mean the child is re-rendered, this is updated dynamically (useEffect and some of the hooks work a little differently, refer to the Reddit widget stuff for details) */}
+                        {/* the same dynamic stuff is true for time */}
+                        <span>Time: {time}</span>
+                        {/* when this button is clicked, it'll call the function that increments counter but also updates time */}
+                        {/* <button onClick={this.displayClick}>Click Me (Clicked {this.state.counter} times)</button> */}
+                        <br />
+                        <hr />
+                        <span>We couldn't load your current time please select an option below:</span>
+                        <br />
+                        <form onSubmit={this.formSubmit}>
+                            <div className="radio">
+                                <label>
+                                    <input
+                                        type="radio"
+                                        value="Morning"
+                                        name="dayPart"
+                                        checked={this.state.selectedOption === "Morning"} 
+                                        onChange={this.onValueChange}
+                                    />
+                                    Morning
+                                </label>
+                            </div>
+                            <div className="radio">
+                                <label>
+                                    <input
+                                        type="radio"
+                                        value="Noon" 
+                                        name="dayPart"
+                                        checked={this.state.selectedOption === "Noon"} 
+                                        onChange={this.onValueChange}
+                                    />
+                                    Noon
+                                </label>
+                            </div>
+                            <div className="radio">
+                                <label>
+                                    <input
+                                        type="radio"
+                                        value="Afternoon"
+                                        name="dayPart"
+                                        checked={this.state.selectedOption === "Afternoon"}
+                                        onChange={this.onValueChange}
+                                    />
+                                    Afternoon
+                                </label>
+                            </div>
+                            <div>
+                                Selected option is : {this.state.selectedOption}
+                            </div>
+                            <button className="btn btn-default" type="submit">
+                                Submit
+                            </button>
+                        </form>
                     </div>
-                    <div className="radio">
-                        <label>
-                            <input
-                                type="radio"
-                                value="Noon"
-                                checked={this.state.selectedOption === "Noon"}
-                                onChange={this.onValueChange}
-                            />
-                            Noon
-                        </label>
-                        <div className="radio">
-                        <label>
-                            <input
-                                type="radio"
-                                value="Afternnon"
-                                checked={this.state.selectedOption === "Afternoon"}
-                                onChange={this.onValueChange}
-                            />
-                            Afternoon
-                        </label>
-                    </div>
-                    </div>
-                </form>
-                {/* <div onChange={this.onChangeValue}></div>
-                <input type="radio" value="Morning" name="dayPart" /> Morning
-                <input type="radio" value="Noon" name="dayPart" /> Noon
-                <input type="radio" value="Afternoon" name="dayPart" /> Afternoon
-                <button onClick={console.log(this.value)}>Submit</button> */}
-                </div>
+
                 )
             }
+        }
+            
         return(
             // this is where the HTML for the widget should be written
             <div>
@@ -136,5 +161,4 @@ export default class WidgetComponent extends Component {
             </div>
         )
     }
-}
-    
+} 
