@@ -6,6 +6,7 @@ import React, { Component } from 'react';
 export default class WidgetComponent extends Component {
 
     //this is the child state of the widget; my understanding is that only children of this one could access it
+
     constructor() {
         super();
         this.state = {
@@ -13,6 +14,7 @@ export default class WidgetComponent extends Component {
         };
         this.onValueChange = this.onValueChange.bind(this);
         this.formSubmit = this.formSubmit.bind(this);
+
     }
 
     //our first attempt at loading in time; it works, but we should probably reformat the time a little
@@ -70,6 +72,7 @@ export default class WidgetComponent extends Component {
         catch{
             time = "Error";
             if(time !== this.loadCurrentTime)
+
             {
                 return (
                     <div>
@@ -134,6 +137,7 @@ export default class WidgetComponent extends Component {
                             </button>
                         </form>
                     </div>
+
                 )
             }
         }
