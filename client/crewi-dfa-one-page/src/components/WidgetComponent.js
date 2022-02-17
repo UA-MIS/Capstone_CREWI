@@ -6,10 +6,11 @@ import React, { Component } from 'react';
 export default class WidgetComponent extends Component {
 
     //this is the child state of the widget; my understanding is that only children of this one could access it
-    // state = {
-    //     counter: 0,
-    //     time: ""
-    // }
+    state = {
+        Morning: "Morning",
+        Noon: "Noon",
+        Afternoon: "Afternoon"
+    }
 
     //our first attempt at loading in time; it works, but we should probably reformat the time a little
     loadCurrentTime = () => {
@@ -73,9 +74,46 @@ export default class WidgetComponent extends Component {
                 <hr/>
                 <span>We couldn't load your current time please select an option below:</span>
                 <br/>
+                <form onSubmit={this.formSubmit}>
+                    <div className="radio">
+                        <label>
+                            <input
+                                type="radio"
+                                value="Morning"
+                                checked={this.state.selectedOption === "Morning"}
+                                onChange={this.onValueChange}
+                            />
+                            Morning
+                        </label>
+                    </div>
+                    <div className="radio">
+                        <label>
+                            <input
+                                type="radio"
+                                value="Noon"
+                                checked={this.state.selectedOption === "Noon"}
+                                onChange={this.onValueChange}
+                            />
+                            Noon
+                        </label>
+                        <div className="radio">
+                        <label>
+                            <input
+                                type="radio"
+                                value="Afternnon"
+                                checked={this.state.selectedOption === "Afternoon"}
+                                onChange={this.onValueChange}
+                            />
+                            Afternoon
+                        </label>
+                    </div>
+                    </div>
+                </form>
+                {/* <div onChange={this.onChangeValue}></div>
                 <input type="radio" value="Morning" name="dayPart" /> Morning
                 <input type="radio" value="Noon" name="dayPart" /> Noon
                 <input type="radio" value="Afternoon" name="dayPart" /> Afternoon
+                <button onClick={console.log(this.value)}>Submit</button> */}
                 </div>
                 )
             }
