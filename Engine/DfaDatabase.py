@@ -3,6 +3,8 @@ from flask import abort
 import os
 import mysql.connector
 
+# NEED TO SANITIZE SQL QUERIES TO PREVENT SQL INJECTIONS
+
 #this can be where the class ends up; I have some concerns about file structure though
 class DfaDatabase:
     def loadItems():

@@ -3,82 +3,26 @@ import React, { useEffect, useState } from 'react'
 const Widget = (props) => {
     //these happen once no matter what; they will not run again
     const [username, setUsername] = useState("");
-    // const [token, setToken] = useState(props.token);
     const [status, setStatus] = useState("loading");
-
-    const [displayName, setDisplayName] = useState("INIT");
-
     const [timeSlot, setTimeSlot] = useState("");
     
     let time = "";
-    // let timeSlot = "";
     
-    //this runs the first time, and then again whenever token is changed 
+    //this runs the first time, and then again whenever username is changed 
     useEffect(async () => {
-        // console.log('TIME TEST');
-        time = loadCurrentTime();
-        let address = await loadCurrentLocation();
-
-        console.log("TIME: " + time);
-        console.log('ADDRESS: ' + address);
-        try {
-            throw 'exception'
-            fetch(`https://api.geoapify.com/v1/geocode/reverse?lat=${result.coords.latitude}&lon=${result.coords.longitude}&apiKey=a9868a78354f43f0a3574acd600e2ceb`, requestOptions)
-            .then(response => response.json())
-            .then(result => console.log(result.features[0].properties))
-              .then(() => {
-                fetch('https://randomuser.me/api')
-                .then(response => {/*console.log(result);*/ return response.json();})
-                .then(data => {
-                    console.log(data);
-                    setDisplayName(data.results[0].name.first);
-                    setStatus("done");
-                    // testFunction();
-                }).catch(error => {
-                    console.log(error);
-                    setStatus("failed");
-                })
-              })
-            .catch(error => console.log('error', error));
-        
-        } catch (e) {
-            // console.log('excepting');
-            setStatus("no-time");
-        
-
-
-        }
-
-        //about 90% sure this will force location to happen before the fetch request
-        const promise = new Promise((resolve, reject) => {
-            navigator.geolocation.getCurrentPosition(resolve, reject);
-          });
-        
-        let result = await promise;
-        
-        var requestOptions = {
-            method: 'GET',
-          };
-          
-        //this should wait on the resolution of the geolocation
-        //then it'll get the address
-        //then it'll call the other API (not related, just for testing purposes)
-
-
-        // console.log(result);
-
+        requestRecommendation();
     }, [username])
 
-    const testFunction = () => {
-        setStatus("done");
-    }
-
-    const requestRecommendation = function(username, time, timeSlot, location) {
+    // fetches the recommendation, might need to be async? doesn't look like it does at the moment
+    const fetchRecommendation = function(username, time, timeSlot, location) {
+        // fix this hard-coded URL later
         fetch(`http://localhost:8000/recommendation/`, {
+            // GET can't take a request body, apparently
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
             },
+            // request parameters for getting a recommendation
             body: JSON.stringify({
               username: username,
               time: time,
@@ -88,12 +32,19 @@ const Widget = (props) => {
         })
             .then(response => response.json())
             .then(result => {
+                // logs the result, updates the state (which will update the DOM)
                 console.log(result);
+                setStatus("success");
+            }).catch(error => {
+                // logs the error, updates state to fail
+                console.log(error);
+                setStatus("fail");
             })
     }
 
     //our first attempt at loading in time; it works, but we should probably reformat the time a little
     const loadCurrentTime = () => {
+        // I'd like to walk through this at some point to make sure edge cases are covered
         // return date + " " + localTime;
         Number.prototype.padLeft = function(base,chr){
             var  len = (String(base || 10).length - String(this).length)+1;
@@ -110,38 +61,45 @@ const Widget = (props) => {
         return dformat;
     }
 
+    // gets coordinates then finds the address from there; "location" is the address we need for the request
     const loadCurrentLocation = async function() {
+        // result will be a Geolocation object; await means execution will pause here until finished
         let result = await getCoordinates();
         
+        // request options were needed for the API, we'd only ever need get anyways
         var requestOptions = {
             method: 'GET',
         };        
 
+        // returns the address to requestRecommendation, takes in coordinates and options
         return await getAddress(result.coords.latitude, result.coords.longitude, requestOptions);
     }
 
+    // returns current latitude and longitude
     const getCoordinates = async function() {
+        // gets the current coordinates using geolocator
         const coordinatePromise = new Promise((resolve, reject) => {
             navigator.geolocation.getCurrentPosition(resolve, reject);
         });
         
+        // returns coords once the promise is resolved/rejected, which happens when geolocating is complete
         return await coordinatePromise;
     }
 
+    // takes coordinates, returns street address
     const getAddress = async function(latitude, longitude, requestOptions) {
+        // need to add a reject procedure, small edits to be made to this
         const addressPromise = new Promise((resolve, reject) => {
             fetch(`https://api.geoapify.com/v1/geocode/reverse?lat=${latitude}&lon=${longitude}&apiKey=a9868a78354f43f0a3574acd600e2ceb`, requestOptions)
                 .then(response => response.json())
                 .then(result => {
+                    // resolving this will basically make it go into addressPromise
                     resolve(result.features[0].properties.formatted);
                 })
         });
 
+        // returns resolved/rejected result, should be the formatted address if resolved
         return await addressPromise;
-    }
-
-    const resetToLoading = () => {
-        setStatus("loading")
     }
 
     //this runs whenever state or props are updated; it updates token so that the useEffect above will run
@@ -150,74 +108,46 @@ const Widget = (props) => {
         setUsername(props.username);
     })
 
+    // runs whenever radio buttons are clicked
     const onValueChange = (event) => {
+        // updates time slot, re-renders so the buttons will actually be checked
         setTimeSlot(event.target.value);
     }
 
+    // runs when submitting time slot
     const formSubmit = (event) => {
+        // prevents redirect on form submit
         event.preventDefault();
-        console.log(timeSlot);
-        setStatus("loading");
-        callMe();
+
+        // because the requesting useEffect only runs on username change, request has to be called again
+        requestRecommendation();
     }
 
-    const callMe = async function() {
-        // console.log('TIME TEST');
-        time = loadCurrentTime();
-        let location = await loadCurrentLocation();
+    // contains overarching logic for loading data, requesting recommendation, and updating status accordingly
+    const requestRecommendation = async function() {
+        // requesting is when the widget is "loading"
+        setStatus("loading");
 
-        console.log("TIME: " + time);
-        console.log('ADDRESS: ' + location);
+        // need to break this error-handling up for now, at the moment if something goes wrong it'll go to no-time mode
         try {
-            requestRecommendation(username, time, timeSlot, location);
+            // load time, small chance this needs to be async but getting time is usually instant
+            time = loadCurrentTime();
+            // grabs location (meaning street address) and waits here so that fetchRec won't get called until this done
+            // loadCurrentLocation needs to return a blank or sentinel value into location if something fails
+            let location = await loadCurrentLocation();
 
-            // throw 'exception'
-            // fetch(`https://api.geoapify.com/v1/geocode/reverse?lat=${result.coords.latitude}&lon=${result.coords.longitude}&apiKey=a9868a78354f43f0a3574acd600e2ceb`, requestOptions)
-            // .then(response => response.json())
-            // .then(result => console.log(result.features[0].properties))
-            //   .then(() => {
-                // fetch('https://randomuser.me/api')
-                // .then(response => {/*console.log(result);*/ return response.json();})
-                // .then(data => {
-                //     console.log(data);
-                //     setDisplayName(data.results[0].name.first);
-                //     setStatus("done");
-                //     // testFunction();
-                // }).catch(error => {
-                //     console.log(error);
-                //     setStatus("failed");
-                // })
-            //   })
-            // .catch(error => console.log('error', error));
+            // this will actually grab the rec and update the status for the DOM
+            fetchRecommendation(username, time, timeSlot, location);
         
         } catch (e) {
-            console.log('excepting');
+            // if something goes wrong, go into no-time mode (again, restructure this later)
             setStatus("no-time");
-        
-
-
         }
-
-        //about 90% sure this will force location to happen before the fetch request
-        const promise = new Promise((resolve, reject) => {
-            navigator.geolocation.getCurrentPosition(resolve, reject);
-          });
-        
-        let result = await promise;
-        
-        var requestOptions = {
-            method: 'GET',
-          };
-          
-        //this should wait on the resolution of the geolocation
-        //then it'll get the address
-        //then it'll call the other API (not related, just for testing purposes)
-
-
-        // console.log(result);
-
     }
 
+    // DISPLAY SECTION
+
+    // loading display
     if (status == "loading"){
         return(
             <div>
@@ -225,6 +155,9 @@ const Widget = (props) => {
             </div>
         )
     }
+
+    // no-time display
+
     else if (status == "no-time")
     {
         return(
@@ -234,13 +167,6 @@ const Widget = (props) => {
                 <span>{username}</span>
                 <br></br>
                 <hr></hr>
-
-                {/* this will show the username of the main component; props can be used to grab parent state info */}
-                {/* since the parent changing would mean the child is re-rendered, this is updated dynamically (useEffect and some of the hooks work a little differently, refer to the Reddit widget stuff for details) */}
-                {/* the same dynamic stuff is true for time */}
-                <span>Time: {time}</span>
-                {/* when this button is clicked, it'll call the function that increments counter but also updates time */}
-                {/* <button onClick={this.displayClick}>Click Me (Clicked {this.state.counter} times)</button> */}
                 <br />
                 <hr />
                 <span>We couldn't load your current time please select an option below:</span>
@@ -293,24 +219,29 @@ const Widget = (props) => {
         )
     }
 
-    else if (status == "done")
+    // success display (if rec is loaded successfully)
+
+    else if (status == "success")
     {
         return(
             <div>
-                {/* <span>{token}, {status}</span> */}
-                <h1>{displayName}</h1>
+                <h1>SUCCESS</h1>
             </div>
         )
     }
-    else if (status == "failed")
+
+    // fail display (if rec fails completely)
+
+    else if (status == "fail")
     {
         return(
             <div>
-                {/* <span>{token}, {status}</span> */}
-                <h1>FAILED</h1>
+                <h1>FAIL</h1>
             </div>
         )
     }
+
+    // may want to add more nuances, like having messages for showing location/time failure on the success display or something
 }
 
 export default Widget;
