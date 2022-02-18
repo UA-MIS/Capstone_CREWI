@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import LoginComponent from './LoginComponent';
+import Widget from './Widget';
 import WidgetComponent from './WidgetComponent';
 
 //this class is going to be our main parent component for the one-page
@@ -24,7 +25,8 @@ export default class MainComponent extends Component {
                 {/* login component is being given the handleUpdate function under the name updateState, which will be referenced in its class */}
                 <LoginComponent updateState={this.handleUpdate}/>
                 {/* the widget just needs a username input, which is taken straight from this state */}
-                <WidgetComponent username={this.state.username}/>
+                {/* <WidgetComponent username={this.state.username}/> */}
+                <Widget username={this.state.username}/>
             </div>
         )
     }
