@@ -47,7 +47,6 @@ const Widget = (props) => {
     //our first attempt at loading in time; it works, but we should probably reformat the time a little
     //if this fails, the exception will be caught in requestRec
     const loadCurrentTime = function() {
-        // throw ''
         // I'd like to walk through this at some point to make sure edge cases are covered
         // return date + " " + localTime;
         Number.prototype.padLeft = function(base,chr){
@@ -67,16 +66,21 @@ const Widget = (props) => {
 
     // gets coordinates then finds the address from there; "location" is the address we need for the request
     const loadCurrentLocation = async function() {
-        // result will be a Geolocation object; await means execution will pause here until finished
-        let result = await getCoordinates();
-        
-        // request options were needed for the API, we'd only ever need get anyways
-        var requestOptions = {
-            method: 'GET',
-        };        
+        try {
+            // result will be a Geolocation object; await means execution will pause here until finished
+            let result = await getCoordinates();
+            
+            // request options were needed for the API, we'd only ever need get anyways
+            var requestOptions = {
+                method: 'GET',
+            };        
 
-        // returns the address to requestRecommendation, takes in coordinates and options
-        return await getAddress(result.coords.latitude, result.coords.longitude, requestOptions);
+            // returns the address to requestRecommendation, takes in coordinates and options
+            return await getAddress(result.coords.latitude, result.coords.longitude, requestOptions);
+        } catch {
+            setStatus("no-location loading");
+            return "";
+        }
     }
 
     // returns current latitude and longitude
@@ -99,7 +103,7 @@ const Widget = (props) => {
                 .then(result => {
                     // resolving this will basically make it go into addressPromise
                     resolve(result.features[0].properties.formatted);
-                })
+                }).catch(error => reject(error))
         });
 
         // returns resolved/rejected result, should be the formatted address if resolved
@@ -109,9 +113,7 @@ const Widget = (props) => {
     //this runs whenever state or props are updated; it updates token so that the useEffect above will run
     //props are updated when the button is clicked bc it will update the main state, etc.
     useEffect(() => {
-        console.log('second useeffect');
         setUsername(props.username);
-        // setTimeSlot("");
     })
 
     // runs whenever radio buttons are clicked
@@ -134,15 +136,11 @@ const Widget = (props) => {
     const requestRecommendation = async function() {
         // requesting is when the widget is "loading"
         setStatus("loading");
-        console.log("STATUS: "+status);
-        // let promise = await setTimeSlot("");
 
         // if time slot is blank, try to request with time loading
         if (timeStatus == "") {
             try {
-                
                 // if this fails, no time is invoked
-                // throw 'exception';
                 time = loadCurrentTime();
 
                 try {
@@ -174,7 +172,6 @@ const Widget = (props) => {
 
                 // this will actually grab the rec and update the status for the DOM
                 fetchRecommendation(username, time, timeSlot, location);
-                
             } catch (error) {
                 console.log(error);
                 // if something goes wrong, display fail
@@ -189,9 +186,20 @@ const Widget = (props) => {
     // DISPLAY SECTION
 
     // loading display
-    if (status == "loading"){
+    if (status == "loading")
+    {
         return(
             <div>
+                <h1>Loading</h1>
+            </div>
+        )
+    }
+
+    else if (status == "no-location loading")
+    {
+        return(
+            <div>
+                <span>Location was unavailable</span>
                 <h1>Loading</h1>
             </div>
         )
