@@ -7,9 +7,11 @@ const Widget = (props) => {
     const [timeSlot, setTimeSlot] = useState("");
     
     let time = "";
-    
+    let timeStatus = "";
+
     //this runs the first time, and then again whenever username is changed 
-    useEffect(async () => {
+    useEffect(() => {
+        timeStatus = "";
         requestRecommendation();
     }, [username])
 
@@ -43,7 +45,9 @@ const Widget = (props) => {
     }
 
     //our first attempt at loading in time; it works, but we should probably reformat the time a little
-    const loadCurrentTime = () => {
+    //if this fails, the exception will be caught in requestRec
+    const loadCurrentTime = function() {
+        // throw ''
         // I'd like to walk through this at some point to make sure edge cases are covered
         // return date + " " + localTime;
         Number.prototype.padLeft = function(base,chr){
@@ -105,7 +109,9 @@ const Widget = (props) => {
     //this runs whenever state or props are updated; it updates token so that the useEffect above will run
     //props are updated when the button is clicked bc it will update the main state, etc.
     useEffect(() => {
+        console.log('second useeffect');
         setUsername(props.username);
+        // setTimeSlot("");
     })
 
     // runs whenever radio buttons are clicked
@@ -118,7 +124,8 @@ const Widget = (props) => {
     const formSubmit = (event) => {
         // prevents redirect on form submit
         event.preventDefault();
-
+        console.log('form submitted');
+        timeStatus = "time slot selected";
         // because the requesting useEffect only runs on username change, request has to be called again
         requestRecommendation();
     }
@@ -127,22 +134,56 @@ const Widget = (props) => {
     const requestRecommendation = async function() {
         // requesting is when the widget is "loading"
         setStatus("loading");
+        console.log("STATUS: "+status);
+        // let promise = await setTimeSlot("");
 
-        // need to break this error-handling up for now, at the moment if something goes wrong it'll go to no-time mode
-        try {
-            // load time, small chance this needs to be async but getting time is usually instant
-            time = loadCurrentTime();
-            // grabs location (meaning street address) and waits here so that fetchRec won't get called until this done
-            // loadCurrentLocation needs to return a blank or sentinel value into location if something fails
-            let location = await loadCurrentLocation();
+        // if time slot is blank, try to request with time loading
+        if (timeStatus == "") {
+            try {
+                
+                // if this fails, no time is invoked
+                // throw 'exception';
+                time = loadCurrentTime();
 
-            // this will actually grab the rec and update the status for the DOM
-            fetchRecommendation(username, time, timeSlot, location);
-        
-        } catch (e) {
-            // if something goes wrong, go into no-time mode (again, restructure this later)
-            setStatus("no-time");
+                try {
+                    // grabs location (meaning street address) and waits here so that fetchRec won't get called until this done
+                    // loadCurrentLocation needs to return a blank or sentinel value into location if something fails
+                    let location = await loadCurrentLocation();
+    
+                    // this will actually grab the rec and update the status for the DOM
+                    fetchRecommendation(username, time, timeSlot, location);
+                
+                } catch (error) {
+                    console.log(error);
+                    // if something goes wrong, go into no-time mode (again, restructure this later)
+                    setStatus("fail");
+                }
+            } catch (error) {
+                // if time loading failed, update status and don't continue the request
+                console.error(error);
+                setTimeSlot("");
+                setStatus("no-time");
+            }
+        } else {
+            console.log("TIMESLOT: " +timeSlot);
+            // this will run if time failed and the user picked a time slot
+            try {
+                // grabs location (meaning street address) and waits here so that fetchRec won't get called until this done
+                // loadCurrentLocation needs to return a blank or sentinel value into location if something fails
+                let location = await loadCurrentLocation();
+
+                // this will actually grab the rec and update the status for the DOM
+                fetchRecommendation(username, time, timeSlot, location);
+                
+            } catch (error) {
+                console.log(error);
+                // if something goes wrong, display fail
+                setStatus("fail");
+            }
         }
+
+        // time slot needs to be reset after each request so that loading time will be re-attempted
+        
     }
 
     // DISPLAY SECTION
