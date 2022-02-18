@@ -1,8 +1,0 @@
-DFA_Host=pfw0ltdr46khxib3.cbetxkdyhwsb.us-east-1.rds.amazonaws.com
-DFA_Username=efaz1cxmqdbyhc2u
-DFA_Password=v54aoujmsgbrpjbr
-DFA_Database=d7e0py5goijr1fa1
-Morning_Time=02:00:00
-Afternoon_Time=10:00:00
-Night_Time=16:00:00
-Default_TimeSlot=Afternoon
