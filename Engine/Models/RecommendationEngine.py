@@ -1,10 +1,12 @@
 from datetime import datetime
+from dotenv import load_dotenv
 from flask import abort
 import os
 
 class RecommendationEngine:
     # this takes in a request and returns the time slot
     def parseRequestTime(self, userRequest):
+        load_dotenv()
         try:
             # if time is blank, return the timeslot if given or the default if it's also missing
             if userRequest.time == "":
@@ -32,7 +34,8 @@ class RecommendationEngine:
             # this should basically never fire, but just in case return the default timeslot
             else:
                 return os.environ.get('Default_TimeSlot')
-        except:
+        except Exception as e:
+            print(e)
             # print issue to terminal and return 500 to requester
             print("500 ERROR: Failed to parse request time into time slot")
             abort(500, "500 ERROR: Failed to parse request time into time slot")
