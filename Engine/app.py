@@ -1,4 +1,5 @@
 from flask import Flask, request, jsonify
+from flask_cors import CORS
 from DfaDatabase import DfaDatabase
 from Models import RecommendationRequest, RecommendationEngine
 
@@ -7,13 +8,15 @@ import os
 # initializes the Flask app
 app = Flask(__name__)
 
+CORS(app)
+
 #specifying the route and methods allowed; I think we'll just do GET, maybe something for logging in?
 @app.route('/hello/', methods=['GET', 'POST'])
 #I don't think the name of the function matters? I have no clue tbh, I guess they don't matter in .NET either...
 def welcome():
     return "update"
 
-@app.route('/recommendation/', methods=['GET'])
+@app.route('/recommendation/', methods=['POST'])
 def recommendItem():
     # request.json will contain the request body; this saves it into a RecommendationRequest object
     # will return a 400 if the request body formatting is bad
