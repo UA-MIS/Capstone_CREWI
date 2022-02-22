@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import LoginComponent from './LoginComponent';
 import Widget from './Widget';
-import WidgetComponent from './WidgetComponent';
 
 //this class is going to be our main parent component for the one-page
 export default class MainComponent extends Component {
