@@ -1,6 +1,6 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
-from DfaDatabase import DfaDatabase
+import DfaDatabase
 from Models import RecommendationRequest, RecommendationEngine
 
 import os
@@ -28,10 +28,17 @@ def recommendItem():
     # setting the time slot; even if its provided, this will confirm it (so if there's a logical conflict time will be prioritized)
     userRequest.timeSlot = engine.parseRequestTime(userRequest)
 
+
+    db = DfaDatabase.DfaDatabase()
+    db.loadUserTransactions(userRequest)
+
+    # transactions = engine.loadRelevantTransactions(userRequest)
+
     # just for testing purposes; at the end, this will just return the rec
     return jsonify({
         "request": {
             "username": userRequest.username,
+            "userId": userRequest.userId,
             "time": userRequest.time,
             "timeSlot": userRequest.timeSlot,
             "location": userRequest.location,
