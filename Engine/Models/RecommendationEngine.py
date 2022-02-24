@@ -1,6 +1,7 @@
 from datetime import datetime
 from flask import abort
 import os
+import printFormatting
 
 class RecommendationEngine:
     # this takes in a request and returns the time slot
@@ -34,5 +35,5 @@ class RecommendationEngine:
                 return os.environ.get('Default_TimeSlot')
         except:
             # print issue to terminal and return 500 to requester
-            print("500 ERROR: Failed to parse request time into time slot")
+            printFormatting.printError("Failed to parse request time into time slot")
             abort(500, "500 ERROR: Failed to parse request time into time slot")

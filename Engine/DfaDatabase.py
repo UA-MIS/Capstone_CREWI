@@ -2,15 +2,14 @@ from dotenv import load_dotenv
 from flask import abort
 import os
 import mysql.connector
-
+import Status
 from Models import Transaction
 
-# NEED TO SANITIZE SQL QUERIES TO PREVENT SQL INJECTIONS
 
 #this can be where the class ends up; I have some concerns about file structure though
 class DfaDatabase:
     # takes username, returns user id or 0 if user not found
-    def lookupUser(self, username):
+    def lookupUser(self, request):
         try:
             # loading environment data
             load_dotenv()
@@ -30,7 +29,7 @@ class DfaDatabase:
                 SELECT User_ID
                 FROM DFA_User
                 WHERE Username = %(username)s
-            """, { 'username': username })
+            """, { 'username': request.username })
 
             # fetching scalar from database
             dbResult = myCursor.fetchone()
@@ -43,17 +42,19 @@ class DfaDatabase:
                 # result is an array for whatever reason, need to pull the single element out
                 return dbResult[0]
 
-            # if result was NULL, return 0 to signal user not found
+            # if result was NULL, return 0 to signal user not found; also add status indicating bad username
+            request.statusArray.append("INVALID_USERNAME")
             return 0
         except Exception as e:
             # print error for debugging
             print(e)
             # print issue to terminal and return 500 to requester
             print("500 ERROR: Something went wrong when looking up the user")
+            # return 0
             abort(500, "500 ERROR: Something went wrong when looking up the user")
 
     # takes username, returns user id or 0 if user not found
-    def lookupStore(self, location):
+    def lookupStore(self, request):
         try:
             # loading environment data
             load_dotenv()
@@ -73,7 +74,7 @@ class DfaDatabase:
                 SELECT Store_ID
                 FROM DFA_Store
                 WHERE Store_Location = %(location)s
-            """, { 'location': location })
+            """, { 'location': request.location })
 
             # fetching scalar from database
             dbResult = myCursor.fetchone()
@@ -86,14 +87,16 @@ class DfaDatabase:
                 # result is an array for whatever reason, need to pull the single element out
                 return dbResult[0]
 
-            # if result was NULL, return 0 to signal store not found
+            # if result was NULL, return 0 to signal store not found; also add status indicating bad location
+            request.statusArray.append("INVALID_LOCATION")
             return 0
         except Exception as e:
             # print error for debugging
             print(e)
             # print issue to terminal and return 500 to requester
             print("500 ERROR: Something went wrong when looking up the location")
-            abort(500, "500 ERROR: Something went wrong when looking up the location")
+            return 0
+            # abort(500, "500 ERROR: Something went wrong when looking up the location")
 
     # takes request, returns array of all the user's matching time slot transactions
     def loadUserTransactions(self, request):
@@ -161,9 +164,12 @@ class DfaDatabase:
         except Exception as e:
             # print error for debugging
             print(e)
-            # print issue to terminal and return 500 to requester
+            # print issue to terminal and add status to array
+            # if this happens, the preference is to continue with the request; FAIL indicates engine failure, the other is for detailed debugging
             print("500 ERROR: Something went wrong when loading user transactions")
-            abort(500, "500 ERROR: Something went wrong when loading user transactions")            
+            request.statusArray.append("FAIL")
+            request.statusArray.append("FAILED_USER_TRANSACTIONS")
+            return []
 
     # takes request, returns array of all the user's matching time slot transactions
     def loadOtherTransactions(self, request, remainder):
@@ -231,6 +237,9 @@ class DfaDatabase:
         except Exception as e:
             # print error for debugging
             print(e)
-            # print issue to terminal and return 500 to requester
+            # print issue to terminal and add status to array
+            # if this happens, the preference is to continue with the request; FAIL indicates engine failure, the other is for detailed debugging
             print("500 ERROR: Something went wrong when loading other user transactions")
-            abort(500, "500 ERROR: Something went wrong when loading other user transactions")                        
+            request.statusArray.append("FAIL")            
+            request.statusArray.append("FAILED_OTHER_TRANSACTIONS")
+            return []
