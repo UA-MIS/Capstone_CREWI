@@ -39,7 +39,6 @@ def recommendItem():
         load_dotenv()
 
         # request.json will contain the request body; this saves it into a RecommendationRequest object
-        # will return a 400 if the request body formatting is bad
         userRequest = RecommendationRequest.RecommendationRequest(request.json)
         
         # making the engine; these are functionally static methods I figured instance methods would be a little clearer
@@ -63,7 +62,7 @@ def recommendItem():
         # adding the non-user transactions to the user ones; loadOtherTransactions takes in the remainder to pull the right number
         # at this point, transactions contains ordered transactions from the user, then ordered from other users, all matching day part
         transactions.extend(db.loadOtherTransactions(userRequest, remainder))
-        # abort(500, "test")
+
         # just for testing purposes; at the end, this will just return the rec
         return jsonify({
             "status": Status.statusArray,
