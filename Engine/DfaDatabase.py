@@ -127,7 +127,7 @@ class DfaDatabase:
 
             # executing the select statement
             myCursor = myConnection.cursor()
-            # prepared SQL statement; selecting the most recent 50 transactions that are in the time slot
+            # prepared SQL statement; selecting the most recent 50 transactions that are in the time slot from the user
             myCursor.execute("""
                 SELECT User_ID, Store_ID, Item_ID
                 FROM DFA_Transaction
@@ -141,7 +141,7 @@ class DfaDatabase:
                 'userId': request.userId,
                 'startTime': startTime,
                 'endTime': endTime,
-                'transactionCount': os.environ.get('Transaction_Count')
+                'transactionCount': int(os.environ.get('Transaction_Count'))
             })
 
             # fetching scalar from database
@@ -197,7 +197,7 @@ class DfaDatabase:
 
             # executing the select statement
             myCursor = myConnection.cursor()
-            # prepared SQL statement; selecting the most recent 50 transactions that are in the time slot
+            # prepared SQL statement; selecting the most recent remainder transactions from other users that are in the time slot
             myCursor.execute("""
                 SELECT User_ID, Store_ID, Item_ID
                 FROM DFA_Transaction
@@ -226,11 +226,11 @@ class DfaDatabase:
             for transaction in dbResults:
                 transactionArray.append(Transaction.Transaction(transaction[0], transaction[1], transaction[2]))
 
-            # return the array; if no transactions match the user, it'll just return an empty array
+            # return the array; if somehow there are no transactions from other users in the day part, it'll just return an empty array
             return transactionArray
         except Exception as e:
             # print error for debugging
             print(e)
             # print issue to terminal and return 500 to requester
-            print("500 ERROR: Something went wrong when loading user transactions")
-            abort(500, "500 ERROR: Something went wrong when loading user transactions")                        
+            print("500 ERROR: Something went wrong when loading other user transactions")
+            abort(500, "500 ERROR: Something went wrong when loading other user transactions")                        

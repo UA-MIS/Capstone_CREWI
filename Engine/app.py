@@ -1,9 +1,11 @@
 from flask import Flask, request, jsonify
+from dotenv import load_dotenv
 from flask_cors import CORS
 import DfaDatabase
 from Models import RecommendationRequest, RecommendationEngine
 
 import os
+import json
 
 # initializes the Flask app
 app = Flask(__name__)
@@ -18,6 +20,8 @@ def welcome():
 
 @app.route('/recommendation/', methods=['POST'])
 def recommendItem():
+    load_dotenv()
+
     # request.json will contain the request body; this saves it into a RecommendationRequest object
     # will return a 400 if the request body formatting is bad
     userRequest = RecommendationRequest.RecommendationRequest(request.json)
@@ -34,12 +38,10 @@ def recommendItem():
     transactions = []
     
     transactions = db.loadUserTransactions(userRequest)
-    remainder = os.environ('Transaction_Count') - len(transactions)
+    remainder = int(os.environ.get('Transaction_Count')) - len(transactions)
+    print(remainder)
+    transactions.extend(db.loadOtherTransactions(userRequest, remainder))
     
-    db.loadOtherTransactions(userRequest, remainder)
-
-    # transactions = engine.loadRelevantTransactions(userRequest)
-
     # just for testing purposes; at the end, this will just return the rec
     return jsonify({
         "request": {
@@ -54,7 +56,8 @@ def recommendItem():
             "username": os.environ.get('DFA_Username'),
             "password": os.environ.get('DFA_Password'),
             "database": os.environ.get('DFA_Database')
-        }
+        },
+        "transactions": json.dumps([transactions])
     })
 
 #from the article "This line ensures that our Flask app runs only when it is executed in the main file and not when it is imported in some other file"
