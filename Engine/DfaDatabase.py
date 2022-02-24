@@ -3,6 +3,7 @@ from flask import abort
 import os
 import mysql.connector
 import Status
+import printFormatting
 from Models import Transaction
 
 
@@ -43,15 +44,14 @@ class DfaDatabase:
                 return dbResult[0]
 
             # if result was NULL, return 0 to signal user not found; also add status indicating bad username
-            request.statusArray.append("INVALID_USERNAME")
+            printFormatting.printWarning("User was not found in the database")
+            Status.addIssue("BAD_USERNAME_ISSUE")
             return 0
         except Exception as e:
-            # print error for debugging
-            print(e)
-            # print issue to terminal and return 500 to requester
-            print("500 ERROR: Something went wrong when looking up the user")
-            # return 0
-            abort(500, "500 ERROR: Something went wrong when looking up the user")
+            # print error for debugging, add fail to status array
+            printFormatting.printError(str(e))
+            Status.addFail("USER_LOOKUP_FAIL")
+            raise e
 
     # takes username, returns user id or 0 if user not found
     def lookupStore(self, request):
@@ -88,15 +88,14 @@ class DfaDatabase:
                 return dbResult[0]
 
             # if result was NULL, return 0 to signal store not found; also add status indicating bad location
-            request.statusArray.append("INVALID_LOCATION")
+            printFormatting.printWarning("Location does not match any store in the database")
+            Status.addIssue("BAD_LOCATION_ISSUE")
             return 0
         except Exception as e:
-            # print error for debugging
-            print(e)
-            # print issue to terminal and return 500 to requester
-            print("500 ERROR: Something went wrong when looking up the location")
-            return 0
-            # abort(500, "500 ERROR: Something went wrong when looking up the location")
+            # print error for debugging, add fail to status array
+            printFormatting.printError(str(e))
+            Status.addFail("LOCATION_LOOKUP_FAIL")
+            raise e
 
     # takes request, returns array of all the user's matching time slot transactions
     def loadUserTransactions(self, request):
@@ -162,14 +161,10 @@ class DfaDatabase:
             # return the array; if no transactions match the user, it'll just return an empty array
             return transactionArray
         except Exception as e:
-            # print error for debugging
-            print(e)
-            # print issue to terminal and add status to array
-            # if this happens, the preference is to continue with the request; FAIL indicates engine failure, the other is for detailed debugging
-            print("500 ERROR: Something went wrong when loading user transactions")
-            request.statusArray.append("FAIL")
-            request.statusArray.append("FAILED_USER_TRANSACTIONS")
-            return []
+            # printing error and updating status
+            printFormatting.printError(str(e))
+            Status.addFail("USER_TRANSACTION_FAIL")
+            raise e
 
     # takes request, returns array of all the user's matching time slot transactions
     def loadOtherTransactions(self, request, remainder):
@@ -235,11 +230,7 @@ class DfaDatabase:
             # return the array; if somehow there are no transactions from other users in the day part, it'll just return an empty array
             return transactionArray
         except Exception as e:
-            # print error for debugging
-            print(e)
-            # print issue to terminal and add status to array
-            # if this happens, the preference is to continue with the request; FAIL indicates engine failure, the other is for detailed debugging
-            print("500 ERROR: Something went wrong when loading other user transactions")
-            request.statusArray.append("FAIL")            
-            request.statusArray.append("FAILED_OTHER_TRANSACTIONS")
-            return []
+            # printing error and updating status
+            printFormatting.printError(str(e))
+            Status.addFail("OTHER_TRANSACTION_FAIL")
+            raise e

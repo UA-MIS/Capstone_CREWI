@@ -86,6 +86,8 @@ def recommendItem():
         # global fail refers to something in the over-arching try/except failing; add it and print the issue
         Status.addFail("GLOBAL_FAIL")
         printFormatting.printError(str(e))
+        # prints out all the fails from the engine
+        printFormatting.printFinalFails(Status.statusArray)
         # return the status array and back-up/default recommendation
         return jsonify({
             "status": Status.statusArray,

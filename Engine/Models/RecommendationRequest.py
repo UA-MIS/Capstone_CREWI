@@ -14,6 +14,9 @@ class RecommendationRequest:
             if userRequest["time"] != "":
                 self.time = datetime.datetime.strptime(userRequest["time"], '%Y-%m-%d %H:%M:%S')
             else:
+                printFormatting.printWarning("Initializing request without time")
+                Status.addIssue("MISSING_TIME_ISSUE")
+
                 self.time = ""
 
             self.timeSlot = userRequest["timeSlot"]
@@ -29,8 +32,7 @@ class RecommendationRequest:
             self.userId = dfaDatabase.lookupUser(self)
             self.storeId = dfaDatabase.lookupStore(self)
         except Exception as e:
-            Status.statusArray.append("test")
-            print(e)
-            # print issue to terminal and return 400 to requester
-            print("400 ERROR: Invalid request body formatting")
-            # abort(400, "400 ERROR: Invalid request body formatting")
+            # printing issue and updating status
+            printFormatting.printError(str(e))
+            Status.addFail("REQUEST_INIT_FAIL")
+            raise e

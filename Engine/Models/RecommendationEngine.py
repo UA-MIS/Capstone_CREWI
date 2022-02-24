@@ -2,6 +2,7 @@ from datetime import datetime
 from flask import abort
 import os
 import printFormatting
+import Status
 
 class RecommendationEngine:
     # this takes in a request and returns the time slot
@@ -9,9 +10,17 @@ class RecommendationEngine:
         try:
             # if time is blank, return the timeslot if given or the default if it's also missing
             if userRequest.time == "":
+
+                printFormatting.printWarning("Time is missing from request")
+                Status.addIssue("MISSING_TIME_ISSUE")
+                
                 if userRequest.timeSlot != "":
                     return userRequest.timeSlot
                 else:
+                
+                    printFormatting.printWarning("Time and time slot are missing from request, using default time slot")
+                    Status.addIssue("MISSING_TIME_AND_TIMESLOT_ISSUE")
+                
                     return os.environ.get('Default_TimeSlot')
 
             # in effect, this will prioritize the time over the provided time slot if they were not related appropriately
@@ -33,7 +42,8 @@ class RecommendationEngine:
             # this should basically never fire, but just in case return the default timeslot
             else:
                 return os.environ.get('Default_TimeSlot')
-        except:
-            # print issue to terminal and return 500 to requester
-            printFormatting.printError("Failed to parse request time into time slot")
-            abort(500, "500 ERROR: Failed to parse request time into time slot")
+        except Exception as e:
+            # print issue to terminal and update status
+            printFormatting.printError(str(e))
+            Status.addFail("PARSE_TIME_FAIL")            
+            raise e

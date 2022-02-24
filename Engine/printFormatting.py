@@ -11,3 +11,9 @@ def printError(message):
 
 def printWarning(message):
     print(warningColor + "WARNING: " + message + resetColor)
+
+def printFinalFails(statuses):
+    print(errorColor + "BREAKING FAILURES:")
+    for status in statuses:
+        print("\t" + status)
+    print(resetColor)

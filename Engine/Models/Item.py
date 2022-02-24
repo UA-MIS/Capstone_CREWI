@@ -11,7 +11,7 @@ class Item:
             self.imgUrl = imgUrl
             self.score = score
         except Exception as e:
+            # if constructing item fails, print issue and update status
             printFormatting.printError(str(e))
-            # print issue to terminal and return 500 to requester
-            printFormatting.printError("Item formatting error")
-            abort(500, "500 ERROR: Item formatting error")
+            Status.addFail("ITEM_INIT_FAIL")
+            raise e
