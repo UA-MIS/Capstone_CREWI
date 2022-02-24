@@ -30,7 +30,13 @@ def recommendItem():
 
 
     db = DfaDatabase.DfaDatabase()
-    db.loadUserTransactions(userRequest)
+    
+    transactions = []
+    
+    transactions = db.loadUserTransactions(userRequest)
+    remainder = os.environ('Transaction_Count') - len(transactions)
+    
+    db.loadOtherTransactions(userRequest, remainder)
 
     # transactions = engine.loadRelevantTransactions(userRequest)
 

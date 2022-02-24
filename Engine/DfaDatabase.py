@@ -135,12 +135,13 @@ class DfaDatabase:
                     and (TIME(Transaction_Time) > %(startTime)s 
                     """ + timeCondition + """ TIME(Transaction_Time) <= %(endTime)s)
                 ORDER BY Transaction_Time DESC
-                LIMIT 50
+                LIMIT %(transactionCount)s
             """,
             {
                 'userId': request.userId,
                 'startTime': startTime,
-                'endTime': endTime
+                'endTime': endTime,
+                'transactionCount': os.environ.get('Transaction_Count')
             })
 
             # fetching scalar from database
