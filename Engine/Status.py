@@ -1,3 +1,5 @@
+# module to handle global status; never add fails or issues directly, always use these methods to do it
+
 # this method should only be called at the beginning of recommendation; it makes the global status array
 def init():
     global statusArray

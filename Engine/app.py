@@ -21,13 +21,6 @@ CORS(app)
 def welcome():
     return "update"
 
-
-def breakingFunction():
-    try:
-        raise Exception("Date provided can't be in the past")
-    except:
-        abort(400)
-
 @app.route('/recommendation/', methods=['POST'])
 def recommendItem():
     # this is the global status array; it needs to be in this scope in case making the request fails

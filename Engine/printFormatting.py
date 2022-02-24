@@ -1,3 +1,5 @@
+# module to print things more descriptively
+
 successColor = '\033[92m' # green
 warningColor = '\033[93m' # yellow
 errorColor = '\033[91m' # red
