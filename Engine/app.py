@@ -66,13 +66,13 @@ def recommendItem():
         # abort(500, "test")
         # just for testing purposes; at the end, this will just return the rec
         return jsonify({
+            "status": Status.statusArray,
             "request": {
                 "username": userRequest.username,
                 "userId": userRequest.userId,
                 "time": userRequest.time,
                 "timeSlot": userRequest.timeSlot,
-                "location": userRequest.location,
-                "status": userRequest.statusArray
+                "location": userRequest.location
             },
             "database": {
                 "host": os.environ.get('DFA_HOST'),

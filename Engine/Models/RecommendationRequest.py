@@ -24,10 +24,6 @@ class RecommendationRequest:
 
             dfaDatabase = DfaDatabase.DfaDatabase()
 
-            # status array contains the various notifiers from the process; like bad username, missing location, etc.
-            # this must happen before the lookups because they may add statuses
-            self.statusArray = []
-
             # the request will start without user and store ID; these will be looked up in the engine functions
             self.userId = dfaDatabase.lookupUser(self)
             self.storeId = dfaDatabase.lookupStore(self)
