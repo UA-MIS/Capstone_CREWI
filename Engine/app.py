@@ -5,10 +5,8 @@ import DfaDatabase
 from Models import RecommendationRequest, RecommendationEngine
 
 import os
-import Status
+import globalStatus
 import printFormatting
-
-status = []
 
 # initializes the Flask app
 app = Flask(__name__)
@@ -25,7 +23,7 @@ def welcome():
 def recommendItem():
     # this is the global status array; it needs to be in this scope in case making the request fails
     # do not initialize it again, the Status object is basically a singleton
-    Status.init()
+    globalStatus.init()
 
     try:
         # need to load environment variables for remainder use later
@@ -56,9 +54,13 @@ def recommendItem():
         # at this point, transactions contains ordered transactions from the user, then ordered from other users, all matching day part
         transactions.extend(db.loadOtherTransactions(userRequest, remainder))
 
+        if (len(transactions) < int(os.environ.get('Transaction_Count'))):
+            printFormatting.printWarning("Using fewer transactions than requested in configuration")
+            globalStatus.addIssue("INSUFFICIENT_TRANSACTIONS_ISSUE")
+
         # just for testing purposes; at the end, this will just return the rec
         return jsonify({
-            "status": Status.statusArray,
+            "status": globalStatus.statusArray,
             "request": {
                 "username": userRequest.username,
                 "userId": userRequest.userId,
@@ -76,13 +78,13 @@ def recommendItem():
     # if any full failures occur during the recommendation process, print the error and return the status array and default rec for the widget
     except Exception as e:
         # global fail refers to something in the over-arching try/except failing; add it and print the issue
-        Status.addFail("GLOBAL_FAIL")
+        globalStatus.addFail("GLOBAL_FAIL")
         printFormatting.printError(str(e))
         # prints out all the fails from the engine
-        printFormatting.printFinalFails(Status.statusArray)
+        printFormatting.printFinalStatus(globalStatus.statusArray)
         # return the status array and back-up/default recommendation
         return jsonify({
-            "status": Status.statusArray,
+            "status": globalStatus.statusArray,
             "defaultRec": "change this later"
         })
 

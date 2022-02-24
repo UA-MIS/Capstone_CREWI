@@ -1,6 +1,6 @@
 from flask import abort
 
-import Status
+import globalStatus
 import printFormatting
 
 class User:
@@ -11,4 +11,4 @@ class User:
         except Exception as e:
             # print issue to terminal and update status
             printFormatting.printError(str(e))
-            Status.addFail("USER_INIT_FAIL")
+            globalStatus.addFail("USER_INIT_FAIL")

@@ -1,6 +1,6 @@
 from flask import abort
 
-import Status
+import globalStatus
 import printFormatting
 
 class Item:
@@ -13,5 +13,5 @@ class Item:
         except Exception as e:
             # if constructing item fails, print issue and update status
             printFormatting.printError(str(e))
-            Status.addFail("ITEM_INIT_FAIL")
+            globalStatus.addFail("ITEM_INIT_FAIL")
             raise e

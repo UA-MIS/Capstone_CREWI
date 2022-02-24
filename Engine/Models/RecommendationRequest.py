@@ -2,7 +2,7 @@ from flask import abort
 import datetime
 import DfaDatabase
 import printFormatting
-import Status
+import globalStatus
 
 class RecommendationRequest:
     def __init__(self, userRequest):
@@ -15,7 +15,7 @@ class RecommendationRequest:
                 self.time = datetime.datetime.strptime(userRequest["time"], '%Y-%m-%d %H:%M:%S')
             else:
                 printFormatting.printWarning("Initializing request without time")
-                Status.addIssue("MISSING_TIME_ISSUE")
+                globalStatus.addIssue("MISSING_TIME_ISSUE")
 
                 self.time = ""
 
@@ -30,5 +30,5 @@ class RecommendationRequest:
         except Exception as e:
             # printing issue and updating status
             printFormatting.printError(str(e))
-            Status.addFail("REQUEST_INIT_FAIL")
+            globalStatus.addFail("REQUEST_INIT_FAIL")
             raise e

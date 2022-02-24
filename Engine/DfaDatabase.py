@@ -2,7 +2,7 @@ from dotenv import load_dotenv
 from flask import abort
 import os
 import mysql.connector
-import Status
+import globalStatus
 import printFormatting
 from Models import Transaction
 
@@ -45,12 +45,12 @@ class DfaDatabase:
 
             # if result was NULL, return 0 to signal user not found; also add status indicating bad username
             printFormatting.printWarning("User was not found in the database")
-            Status.addIssue("BAD_USERNAME_ISSUE")
+            globalStatus.addIssue("BAD_USERNAME_ISSUE")
             return 0
         except Exception as e:
             # print error for debugging, add fail to status array
             printFormatting.printError(str(e))
-            Status.addFail("USER_LOOKUP_FAIL")
+            globalStatus.addFail("USER_LOOKUP_FAIL")
             raise e
 
     # takes username, returns user id or 0 if user not found
@@ -89,12 +89,12 @@ class DfaDatabase:
 
             # if result was NULL, return 0 to signal store not found; also add status indicating bad location
             printFormatting.printWarning("Location does not match any store in the database")
-            Status.addIssue("BAD_LOCATION_ISSUE")
+            globalStatus.addIssue("BAD_LOCATION_ISSUE")
             return 0
         except Exception as e:
             # print error for debugging, add fail to status array
             printFormatting.printError(str(e))
-            Status.addFail("LOCATION_LOOKUP_FAIL")
+            globalStatus.addFail("LOCATION_LOOKUP_FAIL")
             raise e
 
     # takes request, returns array of all the user's matching time slot transactions
@@ -163,7 +163,7 @@ class DfaDatabase:
         except Exception as e:
             # printing error and updating status
             printFormatting.printError(str(e))
-            Status.addFail("USER_TRANSACTION_FAIL")
+            globalStatus.addFail("USER_TRANSACTION_FAIL")
             raise e
 
     # takes request, returns array of all the user's matching time slot transactions
@@ -232,5 +232,5 @@ class DfaDatabase:
         except Exception as e:
             # printing error and updating status
             printFormatting.printError(str(e))
-            Status.addFail("OTHER_TRANSACTION_FAIL")
+            globalStatus.addFail("OTHER_TRANSACTION_FAIL")
             raise e

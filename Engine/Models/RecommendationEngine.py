@@ -2,7 +2,7 @@ from datetime import datetime
 from flask import abort
 import os
 import printFormatting
-import Status
+import globalStatus
 
 class RecommendationEngine:
     # this takes in a request and returns the time slot
@@ -12,14 +12,14 @@ class RecommendationEngine:
             if userRequest.time == "":
 
                 printFormatting.printWarning("Time is missing from request")
-                Status.addIssue("MISSING_TIME_ISSUE")
+                globalStatus.addIssue("MISSING_TIME_ISSUE")
                 
                 if userRequest.timeSlot != "":
                     return userRequest.timeSlot
                 else:
                 
                     printFormatting.printWarning("Time and time slot are missing from request, using default time slot")
-                    Status.addIssue("MISSING_TIME_AND_TIMESLOT_ISSUE")
+                    globalStatus.addIssue("MISSING_TIME_AND_TIMESLOT_ISSUE")
                 
                     return os.environ.get('Default_TimeSlot')
 
@@ -45,5 +45,5 @@ class RecommendationEngine:
         except Exception as e:
             # print issue to terminal and update status
             printFormatting.printError(str(e))
-            Status.addFail("PARSE_TIME_FAIL")            
+            globalStatus.addFail("PARSE_TIME_FAIL")            
             raise e
