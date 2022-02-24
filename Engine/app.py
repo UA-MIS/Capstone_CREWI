@@ -57,7 +57,7 @@ def recommendItem():
             "password": os.environ.get('DFA_Password'),
             "database": os.environ.get('DFA_Database')
         },
-        "transactions": json.dumps([transactions])
+        "transactions": json.dumps({"transactions": transactions})
     })
 
 #from the article "This line ensures that our Flask app runs only when it is executed in the main file and not when it is imported in some other file"
