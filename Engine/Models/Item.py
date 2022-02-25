@@ -15,3 +15,14 @@ class Item:
             printFormatting.printError(str(e))
             globalStatus.addFail("ITEM_INIT_FAIL")
             raise e
+
+    def __str__(self):
+        return "ID: " + str(self.id) + "\tName: " + self.name + "\tImage URL: " + self.imgUrl + "\tScore: " + str(self.score)
+
+def getIdTuple(items):
+    idTuple = ()
+    
+    for item in items:
+        idTuple += (item.id,)
+
+    return idTuple
