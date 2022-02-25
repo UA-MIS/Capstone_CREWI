@@ -1,4 +1,6 @@
 import React, { Component } from 'react';
+import HeaderComponent from './HeaderComponent';
+import FooterComponent from './FooterComponent';
 import LoginComponent from './LoginComponent';
 import Widget from './Widget';
 import WidgetComponent from './WidgetComponent';
@@ -22,11 +24,13 @@ export default class MainComponent extends Component {
     render() {
         return(
             <div>
+                <HeaderComponent updateState={this.handleUpdate}/>
                 {/* login component is being given the handleUpdate function under the name updateState, which will be referenced in its class */}
                 <LoginComponent updateState={this.handleUpdate}/>
                 {/* the widget just needs a username input, which is taken straight from this state */}
                 {/* <WidgetComponent username={this.state.username}/> */}
                 <Widget username={this.state.username}/>
+                <FooterComponent updateState={this.handleUpdate}/>
             </div>
         )
     }
