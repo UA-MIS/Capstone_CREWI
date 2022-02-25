@@ -54,9 +54,17 @@ def recommendItem():
         # at this point, transactions contains ordered transactions from the user, then ordered from other users, all matching day part
         transactions.extend(db.loadOtherTransactions(userRequest, remainder))
 
+        # if fewer than preferred transactions were loaded (because not enough were in the time slot), add an issue
         if (len(transactions) < int(os.environ.get('Transaction_Count'))):
             printFormatting.printWarning("Using fewer transactions than requested in configuration")
             globalStatus.addIssue("INSUFFICIENT_TRANSACTIONS_ISSUE")
+
+        # scoring the transactions; this is pass by reference so nothing is returned, the transactions are directly updated
+        engine.scoreTransactions(transactions, userRequest)
+
+        # printing the transactions, just for testing (remove later)
+        for transaction in transactions:
+            print(transaction)
 
         # just for testing purposes; at the end, this will just return the rec
         return jsonify({
