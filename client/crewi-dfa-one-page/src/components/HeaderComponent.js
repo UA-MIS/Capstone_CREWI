@@ -6,7 +6,11 @@ export default class Header extends Component {
 
     render() {
         return(
-            <header className="App-header"></header>
+            <div className="App-header">
+                <h1>Dude-fil-a</h1>
+                <p></p>
+            </div>
+           
         )
     }
 

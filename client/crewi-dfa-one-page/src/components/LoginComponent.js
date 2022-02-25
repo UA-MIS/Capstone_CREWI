@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
-import Button from 'react-bootstrap/Button';
-import { Grid, GridItem, Box, Container } from '@chakra-ui/react'
+import { Grid, GridItem, Box, Container, Input, Text, InputGroup, InputRightElement, Button } from '@chakra-ui/react'
 
 //this will be our login component; it needs to let the user enter a username and password (not a priority at the moment),
 //validate the user (will do later), and send the username to the widget (which is what we're looking at now)
@@ -40,21 +39,28 @@ export default class LoginComponent extends Component {
 
     render() {
         return(  
-            <Grid templateColumns='repeat(2,1fr)' gap={100} paddingTop='250px' paddingLeft='200px'> 
-                <Container minHeight='300px' maxWidth="500px" borderStyle="solid">
-                    <Box paddingTop='100px'>
-                        {/* we use a non-unique ID here, so be careful about making multiple login components */}
-                        {/* this will call the updateParent method onChange, which is just whenever the input value changes */}
-                        <input id="login" type="text"></input>
-                        <Button onClick={this.updateParent}>Login</Button>
-                    </Box>
-                </Container>
-                <Container minHeight='300px' maxWidth="500px" borderStyle="solid">
-                    <Box paddingTop='100px'>
-                        
-                    </Box>
-                </Container>
-            </Grid>
+            
+                        <div>
+                            {/* <Text mb='10px'></Text> */}
+                            <InputGroup size='md'>
+                                <Input
+                                    id="login" 
+                                    isInvalid
+                                    errorBorderColor='black'
+                                    placeholder='Username'
+                                    size='md'
+                                    // value={value}
+                                    // onChange={handleChange}
+                                />
+                                <InputRightElement width='4.5rem'>
+                                    <Button colorScheme='blue' h='1.75rem' size='sm' onClick={this.updateParent}>
+                                    Login
+                                    </Button>
+                                </InputRightElement>
+                            </InputGroup>
+                            {/* <input id="login" type="text"></input> */}
+                            {/* <Button onClick={this.updateParent}>Login</Button> */}
+                        </div>
         )
     }
 
