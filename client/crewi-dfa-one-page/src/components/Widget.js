@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react'
-import Button from 'react-bootstrap/Button';
+import Container from 'react-bootstrap/Container'
+import Navbar from 'react-bootstrap/Navbar'
+import Button from 'react-bootstrap/Button'
 
 
 const Widget = (props) => {
@@ -31,7 +33,7 @@ const Widget = (props) => {
               username: username,
               time: time,
               timeSlot: timeSlot,
-              location: location  
+              location: location
             })
         })
             .then(response => response.json())

@@ -1,5 +1,8 @@
 from flask import abort
 import datetime
+import DfaDatabase
+import printFormatting
+import globalStatus
 
 class RecommendationRequest:
     def __init__(self, userRequest):
@@ -11,11 +14,21 @@ class RecommendationRequest:
             if userRequest["time"] != "":
                 self.time = datetime.datetime.strptime(userRequest["time"], '%Y-%m-%d %H:%M:%S')
             else:
+                printFormatting.printWarning("Initializing request without time")
+                globalStatus.addIssue("MISSING_TIME_ISSUE")
+
                 self.time = ""
 
             self.timeSlot = userRequest["timeSlot"]
             self.location = userRequest["location"]
-        except:
-            # print issue to terminal and return 400 to requester
-            print("400 ERROR: Invalid request body formatting")
-            abort(400, "400 ERROR: Invalid request body formatting")
+
+            dfaDatabase = DfaDatabase.DfaDatabase()
+
+            # the request will start without user and store ID; these will be looked up in the engine functions
+            self.userId = dfaDatabase.lookupUser(self)
+            self.storeId = dfaDatabase.lookupStore(self)
+        except Exception as e:
+            # printing issue and updating status
+            printFormatting.printError(str(e))
+            globalStatus.addFail("REQUEST_INIT_FAIL")
+            raise e
