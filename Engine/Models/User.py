@@ -1,11 +1,14 @@
 from flask import abort
 
+import globalStatus
+import printFormatting
+
 class User:
     def __init__(self, userId, username):
         try:
             self.userId = userId
             self.username = username
-        except:
-            # print issue to terminal and return 500 to requester
-            print("500 ERROR: User formatting error")
-            abort(500, "500 ERROR: User formatting error")
+        except Exception as e:
+            # print issue to terminal and update status
+            printFormatting.printError(str(e))
+            globalStatus.addFail("USER_INIT_FAIL")

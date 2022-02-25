@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react'
-import Button from 'react-bootstrap/Button';
+import Container from 'react-bootstrap/Container'
+import Navbar from 'react-bootstrap/Navbar'
+import Button from 'react-bootstrap/Button'
 
 
 const Widget = (props) => {
@@ -31,7 +33,7 @@ const Widget = (props) => {
               username: username,
               time: time,
               timeSlot: timeSlot,
-              location: location  
+              location: location
             })
         })
             .then(response => response.json())
@@ -262,7 +264,7 @@ const Widget = (props) => {
                             <div>
                                 Selected option is : {timeSlot}
                             </div>
-                            <button className="btn btn-default" type="submit">
+                            <button className="secondary" type="submit">
                                 Submit
                             </button>
                         </form>                
@@ -276,7 +278,7 @@ const Widget = (props) => {
     {
         return(
             <div>
-                <Button variant="secondary">Test</Button>
+                {/* <Button variant="secondary">Test</Button> */}
                 <h1>SUCCESS</h1>
             </div>
         )
