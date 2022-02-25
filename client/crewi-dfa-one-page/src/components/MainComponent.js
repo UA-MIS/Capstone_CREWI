@@ -22,6 +22,7 @@ export default class MainComponent extends Component {
     render() {
         return(
             <div>
+                <HeaderComponent/>
                 {/* login component is being given the handleUpdate function under the name updateState, which will be referenced in its class */}
                 <LoginComponent updateState={this.handleUpdate}/>
                 {/* the widget just needs a username input, which is taken straight from this state */}

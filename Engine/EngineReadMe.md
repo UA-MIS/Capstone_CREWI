@@ -15,7 +15,8 @@ Download/install C++
 https://docs.microsoft.com/en-us/cpp/windows/latest-supported-vc-redist?view=msvc-170
 select X64 version
 
-pip install mysql-python
+pip install mysql-connector-python
+
 
 add .env file
 

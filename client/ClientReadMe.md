@@ -9,6 +9,7 @@ git pull
 npm install
 npm start
 *may need to open and save package.json the first time*
+npm install react-bootstrap
 
 NOTES:
 If you get a "LF will be replaced..." type warning on git add ., just ignore it for now
