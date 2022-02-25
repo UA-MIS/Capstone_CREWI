@@ -51,6 +51,7 @@ const Widget = (props) => {
     //our first attempt at loading in time; it works, but we should probably reformat the time a little
     //if this fails, the exception will be caught in requestRec
     const loadCurrentTime = function() {
+        throw "ajdslks"
         // I'd like to walk through this at some point to make sure edge cases are covered
         // return date + " " + localTime;
         Number.prototype.padLeft = function(base,chr){

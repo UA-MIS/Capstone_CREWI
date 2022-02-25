@@ -40,7 +40,7 @@ export default class MainComponent extends Component {
                     </Box>
                 </Container>
                 <Container className='App-login shadow-lg p-3 mb-5 bg-white rounded' minHeight='300px' maxWidth="500" borderStyle="solid">
-                    <Box paddingTop='150'>
+                    <Box paddingTop='30'>
                         {/* the widget just needs a username input, which is taken straight from this state */}
                         <Widget username={this.state.username}/>
                     </Box>
