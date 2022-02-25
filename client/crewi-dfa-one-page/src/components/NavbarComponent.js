@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import Container from 'react-bootstrap/Container'
 import Navbar from 'react-bootstrap/Navbar'
 
-export default class Footer extends Component {
+export default class Navbar extends Component {
 
     render() {
         return(

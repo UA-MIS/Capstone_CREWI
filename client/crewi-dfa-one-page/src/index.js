@@ -5,6 +5,19 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
+// // Find all widget divs
+// const WidgetDivs = document.querySelectorAll('.reddit_widget')
+
+// // Inject our React App into each
+// WidgetDivs.forEach(Div => {
+//   ReactDOM.render(
+//     <React.StrictMode>
+//       <App />
+//     </React.StrictMode>,
+//     Div
+//   );
+// })
+
 ReactDOM.render(
   <React.StrictMode>
     <App />
