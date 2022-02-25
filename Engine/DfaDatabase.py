@@ -5,11 +5,10 @@ import mysql.connector
 import globalStatus
 import printFormatting
 from Models import Transaction
+from Models import Item
 
-
-#this can be where the class ends up; I have some concerns about file structure though
 class DfaDatabase:
-    # takes username, returns user id or 0 if user not found
+    # takes request, returns user id or 0 if user not found
     def lookupUser(self, request):
         try:
             # loading environment data
@@ -53,7 +52,7 @@ class DfaDatabase:
             globalStatus.addFail("USER_LOOKUP_FAIL")
             raise e
 
-    # takes username, returns user id or 0 if user not found
+    # takes request, returns user id or 0 if user not found
     def lookupStore(self, request):
         try:
             # loading environment data
@@ -234,3 +233,61 @@ class DfaDatabase:
             printFormatting.printError(str(e))
             globalStatus.addFail("OTHER_TRANSACTION_FAIL")
             raise e
+
+    # takes items, modifies them with info directly so no return is needed
+    # adds URL and name to list of items using the database
+    def lookupItems(self, items):
+        try:
+            # items need to be sorted by ID because they can't be retrieved from the database ordered by score (since score varies)
+            items.sort(key=lambda x: x.id)
+
+            # returns tuple of item IDs (for instance, (1, 2, 3)) and converts it to a string so it can be concatenated into the query
+            itemIds = str(Item.getIdTuple(items))
+
+            # loading environment data
+            load_dotenv()
+
+            # opening the connection; may want to look into using a connection string dictionary later
+            myConnection = mysql.connector.connect(
+                host = os.environ.get('DFA_Host'),
+                username = os.environ.get('DFA_Username'),
+                password = os.environ.get('DFA_Password'),
+                database = os.environ.get('DFA_Database')
+            )
+
+            # executing the select statement
+            myCursor = myConnection.cursor()
+            # prepared SQL statement; selecting the ID, name, and URL for items in the ID array
+            myCursor.execute("""
+                SELECT Item_ID, Item_Name, Menu_Pic
+                FROM DFA_Menu
+                WHERE Item_ID IN """ + itemIds + """
+                ORDER BY Item_ID""")
+
+            # fetching results from database
+            dbResult = myCursor.fetchall()
+
+            # closing connection
+            myConnection.close()
+
+            # looping through results and assigning names and URLs
+            for index, result in enumerate(dbResult):
+                # because items is sorted by ID and the results are queryed by ID, they already line up
+                # however, just to be safe, this is double-checked with the if statement
+                # if there's a misalignment issue, no data will be assigned to that item
+                if items[index].id == int(result[0]):
+                    items[index].name = str(result[1])
+                    items[index].imgUrl = str(result[2])
+
+
+            # sorting items by score again so they'll be returned in the right order
+            items.sort(key=lambda x: -1*x.score)
+
+            # if no items are found, the engine won't return useful info to the front end, so it's considered a full failure
+            if dbResult is None:
+                raise e
+        except Exception as e:
+            # print error for debugging, add fail to status array
+            printFormatting.printError(str(e))
+            globalStatus.addFail("ITEMS_LOOKUP_FAIL")
+            raise e    
