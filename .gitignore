@@ -1,3 +1,2 @@
 *.env
-Engine/__pycache__/
-Engine/Models/__pycache__
+**/__pycache__
