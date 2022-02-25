@@ -262,9 +262,9 @@ const Widget = (props) => {
                             <div>
                                 Selected option is : {timeSlot}
                             </div>
-                            <button className="btn btn-default" type="submit">
+                            <Button className="btn btn-default" type="submit">
                                 Submit
-                            </button>
+                            </Button>
                         </form>                
             </div>
         )
@@ -276,7 +276,7 @@ const Widget = (props) => {
     {
         return(
             <div>
-                <Button variant="secondary">Test</Button>
+                {/* <Button variant="secondary">Test</Button> */}
                 <h1>SUCCESS</h1>
             </div>
         )
