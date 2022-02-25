@@ -66,7 +66,7 @@ class RecommendationEngine:
                 if transaction.userId != request.userId : transaction.score *= float(os.environ.get('Other_User_Reducer'))
                 # if the request location matches the transaction's store's location, increase the score by a multiplier (configurable)
                 if transaction.storeId == request.storeId : transaction.score *= float(os.environ.get('Matching_Store_Multiplier'))
-                
+
         except Exception as e:
             # print issue to terminal and update status
             printFormatting.printError(str(e))
