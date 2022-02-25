@@ -10,7 +10,11 @@ export default class NavbarComponent extends Component {
                 <Container>
                     <Navbar expand="lg" variant="light" bg="light">
                         <Container>
-                            <Navbar.Brand href="#">Navbar</Navbar.Brand>
+                            <Navbar.Brand href="#">Home</Navbar.Brand>
+                            <Navbar.Brand href="#">About</Navbar.Brand>
+                            <Navbar.Brand href="#">Menu</Navbar.Brand>
+                            <Navbar.Brand href="#">Profile</Navbar.Brand>
+                            <Navbar.Brand href="#">Menu</Navbar.Brand>
                         </Container>
                     </Navbar>
                 </Container>

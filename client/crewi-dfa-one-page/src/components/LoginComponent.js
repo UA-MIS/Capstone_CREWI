@@ -40,8 +40,8 @@ export default class LoginComponent extends Component {
     render() {
         return(  
             
-                        <div className='App-login'>
-                            <Text mb='8px'>Username:</Text>
+                        <div>
+                            {/* <Text mb='10px'></Text> */}
                             <InputGroup size='md'>
                                 <Input
                                     id="login" 
