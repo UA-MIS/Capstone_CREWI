@@ -264,9 +264,9 @@ const Widget = (props) => {
                             <div>
                                 Selected option is : {timeSlot}
                             </div>
-                            <button className="secondary" type="submit">
+                            <Button className="btn btn-default" type="submit">
                                 Submit
-                            </button>
+                            </Button>
                         </form>                
             </div>
         )
