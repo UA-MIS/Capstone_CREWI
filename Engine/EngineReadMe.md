@@ -1,6 +1,10 @@
 Going to put the Flask API and actual engine logic in here.
 
 SETUP:
+download Python 3.10 from MS Store
+enter command "pip install flask-cors" in terminal
+enter command "pip install dotenv" in VS terminal
+
 Make sure you're in the engine directory
 run "python app.py" in zterminal
 go to localhost:8000/hello (subject to change based on paths)
