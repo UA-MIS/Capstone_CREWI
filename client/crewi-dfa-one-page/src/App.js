@@ -1,5 +1,9 @@
 import './App.css';
 import './styling/HeaderStyle.css'
+import './styling/NavbarStyle.css'
+import './styling/LoginStyle.css'
+import './styling/WidgetStyle.css'
+import './styling/FooterStyle.css'
 import MainComponent from './components/MainComponent';
 
 function App() {
