@@ -4,6 +4,7 @@ from flask import abort
 import os
 import printFormatting
 import globalStatus
+from Models import Item
 
 class RecommendationEngine:
     # this takes in a request and returns the time slot
@@ -66,9 +67,47 @@ class RecommendationEngine:
                 if transaction.userId != request.userId : transaction.score *= float(os.environ.get('Other_User_Reducer'))
                 # if the request location matches the transaction's store's location, increase the score by a multiplier (configurable)
                 if transaction.storeId == request.storeId : transaction.score *= float(os.environ.get('Matching_Store_Multiplier'))
-
         except Exception as e:
             # print issue to terminal and update status
             printFormatting.printError(str(e))
             globalStatus.addFail("SCORE_TRANSACTION_FAIL")
+            raise e
+
+    # this takes in the scored transactions and returns an array of items with their scores aggregated
+    # this is just control break logic
+    def aggregateScores(self, transactions):
+        try:
+            # making item array
+            items = []
+            
+            # sorting transactions by itemId
+            transactions.sort(key=lambda x: x.itemId)
+
+            # grabbing the first item ID and starting its score at 0
+            currentItemId = transactions[0].itemId
+            currentItemScore = 0
+
+            # loop through all the transactions
+            for transaction in transactions:
+                # if the current item matches the item ID, add its score to the item's total score
+                if (transaction.itemId == currentItemId):
+                    currentItemScore += transaction.score
+                # if the ID doesn't match, add the prior item to the array and start tracking the next item's ID and score
+                else:
+                    items.append(Item.Item(currentItemId, "", "", currentItemScore))
+                    currentItemId = transaction.itemId
+                    currentItemScore = transaction.score
+
+            # add the last item to the array of items
+            items.append(Item.Item(currentItemId, "", "", currentItemScore))
+
+            # sort the items by score; the recommendation will be items[0] after this
+            items.sort(key=lambda x: -1*x.score)
+
+            # return the items: they have their IDs and scores, but still need name/image URL
+            return items
+        except Exception as e:
+            # print issue to terminal and update status
+            printFormatting.printError(str(e))
+            globalStatus.addFail("AGGREGRATE_SCORES_FAIL")
             raise e

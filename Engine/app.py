@@ -59,29 +59,30 @@ def recommendItem():
             printFormatting.printWarning("Using fewer transactions than requested in configuration")
             globalStatus.addIssue("INSUFFICIENT_TRANSACTIONS_ISSUE")
 
+        if len(transactions) == 0:
+            printFormatting.printError("No transactions found; cannot proceed with analysis")
+            globalStatus.addFail("ZERO_TRANSACTIONS_FAIL")
+            raise Exception("No transactions found; cannot proceed with analysis")
+
         # scoring the transactions; this is pass by reference so nothing is returned, the transactions are directly updated
         engine.scoreTransactions(transactions, userRequest)
 
-        # printing the transactions, just for testing (remove later)
-        for transaction in transactions:
-            print(transaction)
+        # initializing item array
+        items = []
+        
+        # this will return items with ID and scores, sorted from highest to lowest score (items[0] is the top recommendation)
+        items = engine.aggregateScores(transactions)
 
-        # just for testing purposes; at the end, this will just return the rec
+        # removing the lower scoring items; the remaining items will be returned as the recommendations
+        items = items[:int(os.environ.get('Recommendation_Count'))]
+
+        # this will modify the items directly by adding their URLs and scores
+        db.lookupItems(items)
+
+        # returns the statuses and recommendations; recommendations[0] will be the top recommendation
         return jsonify({
-            "status": globalStatus.statusArray,
-            "request": {
-                "username": userRequest.username,
-                "userId": userRequest.userId,
-                "time": userRequest.time,
-                "timeSlot": userRequest.timeSlot,
-                "location": userRequest.location
-            },
-            "database": {
-                "host": os.environ.get('DFA_HOST'),
-                "username": os.environ.get('DFA_Username'),
-                "password": os.environ.get('DFA_Password'),
-                "database": os.environ.get('DFA_Database')
-            }
+            "statuses": globalStatus.statusArray,
+            "recommendations": [item.__dict__ for item in items]
         })
     # if any full failures occur during the recommendation process, print the error and return the status array and default rec for the widget
     except Exception as e:
@@ -90,10 +91,17 @@ def recommendItem():
         printFormatting.printError(str(e))
         # prints out all the fails from the engine
         printFormatting.printFinalStatus(globalStatus.statusArray)
-        # return the status array and back-up/default recommendation
+        # return the status array and back-up/default recommendation; this uses the same format for easier handling on the front-end
+        # however, recommendations will just be an array with the single default recommendation
+        # the values come from the configuration file rather than attempting to access the database since that's a likely cause of failure
         return jsonify({
-            "status": globalStatus.statusArray,
-            "defaultRec": "change this later"
+            "statuses": globalStatus.statusArray,
+            "recommendations": [{
+                "id": int(os.environ.get('Default_Recommendation_ID')),
+                "imgUrl": os.environ.get('Default_Recommendation_ImageURL'),
+                "name": os.environ.get('Default_Recommendation_Name'),
+                "score": int(os.environ.get('Default_Recommendation_Score'))
+            }]
         })
 
 #from the article "This line ensures that our Flask app runs only when it is executed in the main file and not when it is imported in some other file"
