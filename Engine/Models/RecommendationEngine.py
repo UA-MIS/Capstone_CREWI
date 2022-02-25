@@ -1,4 +1,5 @@
 from datetime import datetime
+from dotenv import load_dotenv
 from flask import abort
 import os
 import printFormatting
@@ -46,4 +47,22 @@ class RecommendationEngine:
             # print issue to terminal and update status
             printFormatting.printError(str(e))
             globalStatus.addFail("PARSE_TIME_FAIL")            
+            raise e
+
+    def scoreTransactions(self, transactions, request):
+        try:
+            load_dotenv()
+
+            for index, transaction in enumerate(transactions):
+                transaction.score = float(float(os.environ.get('Numerator_Constant')) / (index + 1))
+                transaction.score += float(os.environ.get('Addition_Constant'))
+
+                if transaction.userId != request.userId : transaction.score *= float(os.environ.get('Other_User_Reducer'))
+                if transaction.storeId == request.storeId : transaction.score *= float(os.environ.get('Matching_Store_Multiplier'))
+
+
+        except Exception as e:
+            # print issue to terminal and update status
+            printFormatting.printError(str(e))
+            globalStatus.addFail("SCORE_TRANSACTION_FAIL")
             raise e

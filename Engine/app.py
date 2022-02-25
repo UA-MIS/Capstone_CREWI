@@ -58,6 +58,11 @@ def recommendItem():
             printFormatting.printWarning("Using fewer transactions than requested in configuration")
             globalStatus.addIssue("INSUFFICIENT_TRANSACTIONS_ISSUE")
 
+        engine.scoreTransactions(transactions, userRequest)
+
+        for transaction in transactions:
+            print(transaction)
+
         # just for testing purposes; at the end, this will just return the rec
         return jsonify({
             "status": globalStatus.statusArray,
