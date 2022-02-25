@@ -18,3 +18,7 @@ If you get a crash the first time you try to open up try opening and saving pack
 index.js is the starting point
 
 public/index.html is where the page will actually load; for the most part you shouldn't alter it directly
+
+Packages
+
+Chakra-UI: npm i @chakra-ui/react @emotion/react@^11 @emotion/styled@^11 framer-motion@^6 (https://chakra-ui.com/docs/getting-started)
