@@ -5,6 +5,7 @@ import './styling/LoginStyle.css'
 import './styling/WidgetStyle.css'
 import './styling/FooterStyle.css'
 import MainComponent from './components/MainComponent';
+import SocialFollow from "./components/FooterComponent"
 
 function App() {
   return (

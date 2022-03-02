@@ -1,18 +1,18 @@
 import React, { useEffect, useState } from 'react'
-import Container from 'react-bootstrap/Container'
 import Navbar from 'react-bootstrap/Navbar'
-import Button from 'react-bootstrap/Button'
-
+import { Box, Container, MdCall, MdBuild, Button } from '@chakra-ui/react'
 
 const Widget = (props) => {
     //these happen once no matter what; they will not run again
     const [username, setUsername] = useState("");
     const [status, setStatus] = useState("loading");
     const [timeSlot, setTimeSlot] = useState("");
-    
+    const [imgUrl, setImgUrl] = useState("");
+    const [itemName, setItemName] = useState("");
+
     let time = "";
     let timeStatus = "";
-
+    
     //this runs the first time, and then again whenever username is changed 
     useEffect(() => {
         timeStatus = "";
@@ -40,6 +40,10 @@ const Widget = (props) => {
             .then(result => {
                 // logs the result, updates the state (which will update the DOM)
                 console.log(result);
+
+                setImgUrl(result.recommendations[0].imgUrl);
+                setItemName(result.recommendations[0].name);
+
                 setStatus("success");
             }).catch(error => {
                 // logs the error, updates state to fail
@@ -51,7 +55,6 @@ const Widget = (props) => {
     //our first attempt at loading in time; it works, but we should probably reformat the time a little
     //if this fails, the exception will be caught in requestRec
     const loadCurrentTime = function() {
-        throw "ajdslks"
         // I'd like to walk through this at some point to make sure edge cases are covered
         // return date + " " + localTime;
         Number.prototype.padLeft = function(base,chr){
@@ -214,6 +217,7 @@ const Widget = (props) => {
 
     else if (status == "no-time")
     {
+        //I think here we would want to display username if the end user has enetered it
         return(
             <div>
                 <hr></hr>
@@ -278,10 +282,35 @@ const Widget = (props) => {
     else if (status == "success")
     {
         return(
+            // <div style={{
+            //     backgroundImage: `url(${imgUrl})`
+            // }}>
+            <Container style={{
+                backgroundImage: `url("https://www.cfacdn.com/img/order/menu/Online/Entrees/CFASpicySandwich_1080.png")`,
+                backgroundRepeat: `no-repeat`,
+                // backgroundAttachment: `fixed`,
+                backgroundPosition: `center`,
+                backgroundSize: `150% 200%`,
+                borderRadius: `20px`
+                }} className='App-login shadow-lg p-3 mb-5 bg-white rounded' minHeight='300px' maxWidth="500" borderStyle="solid">
+                    <Box paddingTop='30'>
             <div>
                 {/* <Button variant="secondary">Test</Button> */}
-                <h1>SUCCESS</h1>
+                <span style = {{fontSize: `calc(10px + 2vmin)`, color: `rgb(255, 255, 255)`, textShadow: '2px 2px 30px black, 2px 2px 30px black, 2px 2px 30px black, 2px 2px 30px black, 2px 2px 30px black, 2px 2px 30px black, 2px 2px 30px black'}}>
+                    {itemName}
+                </span>
+                <br/>
+                <br/>
+                <br/>
+                <br/>
+                <br/>
+                <br/>
+                <Button colorScheme='blue' h='2.75rem' size='md'>
+                    Add to Cart
+                </Button>
             </div>
+            </Box>
+            </Container>
         )
     }
 
