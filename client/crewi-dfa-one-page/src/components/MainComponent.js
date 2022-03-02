@@ -27,9 +27,11 @@ export default class MainComponent extends Component {
         return(
             <div>
                 <HeaderComponent/>
+                <hr/>
                 <NavbarComponent/>
+                <hr/>
+                <br/>
                 {/* login component is being given the handleUpdate function under the name updateState, which will be referenced in its class */}
-
                 {/* The grid contains the login component and the widget compnent. Each are called inside the box */}
                 <Grid templateColumns='repeat(2,1fr)' gap={0} paddingTop='100px' paddingBottom='100px'>
                 <Container className='App-login shadow-lg p-3 mb-5 bg-white rounded' minHeight='300px' maxWidth="500px" borderStyle='solid'>
@@ -39,13 +41,15 @@ export default class MainComponent extends Component {
                         <LoginComponent updateState={this.handleUpdate}/>
                     </Box>
                 </Container>
-                <Container className='App-login shadow-lg p-3 mb-5 bg-white rounded' minHeight='300px' maxWidth="500" borderStyle="solid">
-                    <Box paddingTop='30'>
+                {/* <Container className='App-login shadow-lg p-3 mb-5 bg-white rounded' minHeight='300px' maxWidth="500" borderStyle="solid">
+                    <Box paddingTop='30'> */}
                         {/* the widget just needs a username input, which is taken straight from this state */}
                         <Widget username={this.state.username}/>
-                    </Box>
-                </Container>
+                    {/* </Box>
+                </Container> */}
                 </Grid>
+                <hr/>
+                <br/>
                 <FooterComponent/>
             </div>
         )
