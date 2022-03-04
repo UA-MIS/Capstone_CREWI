@@ -4,7 +4,8 @@ import Navbar from 'react-bootstrap/Navbar'
 import Nav from 'react-bootstrap/Nav'
 import NavDropdown from 'react-bootstrap/NavDropdown'
 import Dropdown from 'react-bootstrap/Dropdown'
-import { Button, InputRightElementn } from '@chakra-ui/react'
+import { IconButton } from '@chakra-ui/react'
+import { BsCart3, BSCart3 } from 'react-icons/bs';
 
 export default class NavbarComponent extends Component {
 
@@ -19,6 +20,14 @@ export default class NavbarComponent extends Component {
                             <Navbar.Brand href="#">Profile</Navbar.Brand>
                             </Navbar.Collapse>
                             </Nav>
+                            <div style = {{marginLeft: `80%`}}>
+                                <IconButton
+                                colorScheme='blue'
+                                aria-label='Search database'
+                                icon={<BsCart3 />}
+                                />
+                            </div>
+            
                     </Navbar>
                 </Container>
             // <Navbar bg="light" expand="lg">
