@@ -110,3 +110,9 @@
   transform: translateY(15px);
   transition: transform 0.3s ease-out 0s;
 }
+
+.widgetLoading {
+  background-size: 45%!important;
+  background-repeat: no-repeat;
+  background-position: center;
+}

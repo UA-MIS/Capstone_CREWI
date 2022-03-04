@@ -8,7 +8,7 @@ export default class Header extends Component {
 
     render() {
         return(
-            <div class="social-container">
+            <div className="social-container">
 
                 <a href="https://www.coolmathgames.com/0-papas-pizzeria"
                     className="youtube social">
