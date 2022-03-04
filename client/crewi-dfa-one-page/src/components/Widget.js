@@ -191,6 +191,10 @@ const Widget = (props) => {
         
     }
 
+    const clickWidget = () =>{
+        console.log('test')
+    }
+
     // DISPLAY SECTION
 
     // loading display
@@ -285,32 +289,32 @@ const Widget = (props) => {
             // <div style={{
             //     backgroundImage: `url(${imgUrl})`
             // }}>
-            <Container style={{
-                backgroundImage: `url("https://www.cfacdn.com/img/order/menu/Online/Entrees/CFASpicySandwich_1080.png")`,
-                backgroundRepeat: `no-repeat`,
-                // backgroundAttachment: `fixed`,
-                backgroundPosition: `center`,
-                backgroundSize: `150% 200%`,
-                borderRadius: `20px`
-                }} className='App-login shadow-lg p-3 mb-5 bg-white rounded' minHeight='300px' maxWidth="500" borderStyle="solid">
-                    <Box paddingTop='30'>
-            <div>
+            // <Container style={{
+            //     backgroundImage: `url("https://www.cfacdn.com/img/order/menu/Online/Entrees/CFASpicySandwich_1080.png")`,
+            //     backgroundRepeat: `no-repeat`,
+            //     // backgroundAttachment: `fixed`,
+            //     backgroundPosition: `center`,
+            //     backgroundSize: `150% 200%`,
+            //     borderRadius: `20px`
+            //     }} className='App-login shadow-lg p-3 mb-5 bg-white rounded' minHeight='300px' maxWidth="500" borderStyle="solid">
+            //         <Box paddingTop='30'>
+            <div onClick={clickWidget} className='widgetBox boxShadowImitation' style={{
+                backgroundImage: `url(${imgUrl})`
+            }}>
                 {/* <Button variant="secondary">Test</Button> */}
-                <span style = {{fontSize: `calc(10px + 2vmin)`, color: `rgb(255, 255, 255)`, textShadow: '2px 2px 30px black, 2px 2px 30px black, 2px 2px 30px black, 2px 2px 30px black, 2px 2px 30px black, 2px 2px 30px black, 2px 2px 30px black'}}>
+                <span className='widgetText'>
                     {itemName}
                 </span>
                 <br/>
                 <br/>
                 <br/>
                 <br/>
+                {/* <span className='orderText' style={{display: 'none'}} id="orderSpan">ORDER</span> */}
                 <br/>
-                <br/>
-                <Button colorScheme='blue' h='2.75rem' size='md'>
-                    Add to Cart
-                </Button>
+            <button className='widgetButton' id="orderSpan">Add to Cart</button>
             </div>
-            </Box>
-            </Container>
+            // </Box>
+            // </Container>
         )
     }
 

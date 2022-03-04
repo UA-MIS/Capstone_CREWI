@@ -7,8 +7,8 @@ export default class Header extends Component {
 
     render() {
         return(
-            <div className="App-header">
-                <img src="https://drive.google.com/uc?export=view&id=1H-OnboMgq5dDT75LE4juVORXNAePQCHH"/>
+            <div style={{paddingTop: `20px`, paddingBottom: `20px`}} className="App-header">
+                <img src="https://drive.google.com/uc?export=view&id=1nJsdIgsfY_YUqMAYwnLKGchTWXD_jtsj"/>
                 <p></p>
             </div>
            
