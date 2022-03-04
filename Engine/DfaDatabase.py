@@ -39,6 +39,7 @@ class DfaDatabase:
 
             # return query results if it wasn't NULL (None in Python means NULL in SQL)
             if dbResult is not None:
+                printFormatting.printSuccess("User found in the database")
                 # result is an array for whatever reason, need to pull the single element out
                 return dbResult[0]
 
@@ -83,6 +84,7 @@ class DfaDatabase:
 
             # return query results if it wasn't NULL (None in Python means NULL in SQL)
             if dbResult is not None:
+                printFormatting.printSuccess("Location matched a store in the database")
                 # result is an array for whatever reason, need to pull the single element out
                 return dbResult[0]
 
@@ -157,6 +159,7 @@ class DfaDatabase:
             for transaction in dbResults:
                 transactionArray.append(Transaction.Transaction(transaction[0], transaction[1], transaction[2]))
 
+            printFormatting.printSuccess("Loaded user transactions")
             # return the array; if no transactions match the user, it'll just return an empty array
             return transactionArray
         except Exception as e:
@@ -226,6 +229,7 @@ class DfaDatabase:
             for transaction in dbResults:
                 transactionArray.append(Transaction.Transaction(transaction[0], transaction[1], transaction[2]))
 
+            printFormatting.printSuccess("Loaded non-user transactions")
             # return the array; if somehow there are no transactions from other users in the day part, it'll just return an empty array
             return transactionArray
         except Exception as e:
@@ -283,6 +287,7 @@ class DfaDatabase:
             # sorting items by score again so they'll be returned in the right order
             items.sort(key=lambda x: -1*x.score)
 
+            printFormatting.printSuccess("Looked up recommendation items in database")
             # if no items are found, the engine won't return useful info to the front end, so it's considered a full failure
             if dbResult is None:
                 raise e

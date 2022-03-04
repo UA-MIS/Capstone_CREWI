@@ -34,6 +34,7 @@ class RecommendationEngine:
             afternoonTime = datetime.strptime(os.environ.get('Afternoon_Time'), '%H:%M:%S').time()
             nightTime = datetime.strptime(os.environ.get('Night_Time'), '%H:%M:%S').time()
 
+            printFormatting.printSuccess("Time parsed successfully")
             # this should work in general, but it does presume 3 timezones and that night contains the midnight cutoff
             if time > morningTime and time <= afternoonTime:
                 return 'Morning'
@@ -67,6 +68,8 @@ class RecommendationEngine:
                 if transaction.userId != request.userId : transaction.score *= float(os.environ.get('Other_User_Reducer'))
                 # if the request location matches the transaction's store's location, increase the score by a multiplier (configurable)
                 if transaction.storeId == request.storeId : transaction.score *= float(os.environ.get('Matching_Store_Multiplier'))
+
+            printFormatting.printSuccess("Scored transactions")
         except Exception as e:
             # print issue to terminal and update status
             printFormatting.printError(str(e))
@@ -104,6 +107,7 @@ class RecommendationEngine:
             # sort the items by score; the recommendation will be items[0] after this
             items.sort(key=lambda x: -1*x.score)
 
+            printFormatting.printSuccess("Aggregated item scores")
             # return the items: they have their IDs and scores, but still need name/image URL
             return items
         except Exception as e:

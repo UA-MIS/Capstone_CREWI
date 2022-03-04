@@ -1,6 +1,4 @@
 import React, { useEffect, useState } from 'react'
-import Navbar from 'react-bootstrap/Navbar'
-import { Box, Container, MdCall, MdBuild, Button } from '@chakra-ui/react'
 
 const Widget = (props) => {
     //these happen once no matter what; they will not run again
@@ -134,10 +132,13 @@ const Widget = (props) => {
     const formSubmit = (event) => {
         // prevents redirect on form submit
         event.preventDefault();
-        console.log('form submitted');
-        timeStatus = "time slot selected";
-        // because the requesting useEffect only runs on username change, request has to be called again
-        requestRecommendation();
+        // only proceed if the user actually picks a time slot; otherwise, just ignore the submit until they do
+        if (timeSlot != "") {
+            console.log('form submitted');
+            timeStatus = "time slot selected";
+            // because the requesting useEffect only runs on username change, request has to be called again
+            requestRecommendation();
+        }
     }
 
     // contains overarching logic for loading data, requesting recommendation, and updating status accordingly
@@ -201,18 +202,22 @@ const Widget = (props) => {
     if (status == "loading")
     {
         return(
-            <div>
-                <h1>Loading</h1>
-            </div>
+            <div onClick={clickWidget} className='widgetLoading widgetBox boxShadowImitation' style={{
+                backgroundImage: `url(https://drive.google.com/uc?export=view&id=1jOKIa9urkCFsa6OGGf8Hrd8DROPzkmfa)`
+            }}>
+            </div>        
         )
     }
 
     else if (status == "no-location loading")
     {
         return(
-            <div>
-                <span>Location was unavailable</span>
-                <h1>Loading</h1>
+            <div onClick={clickWidget} className='widgetLoading widgetBox boxShadowImitation' style={{
+                backgroundImage: `url(https://drive.google.com/uc?export=view&id=1jOKIa9urkCFsa6OGGf8Hrd8DROPzkmfa)`
+            }}>
+                <span className='widgetText'>
+                    Location unavailable
+                </span>
             </div>
         )
     }
@@ -223,17 +228,14 @@ const Widget = (props) => {
     {
         //I think here we would want to display username if the end user has enetered it
         return(
-            <div>
-                <hr></hr>
-                <span>Username: </span>
-                <span>{username}</span>
-                <br></br>
-                <hr></hr>
-                <br />
+            <div className='widgetBox boxShadowImitation' style={{
+                backgroundImage: `none`}}>
+                
+                <span>Unable to load time, please select an option below:</span>
                 <hr />
-                <span>We couldn't load your current time please select an option below:</span>
                 <br />
                 <form onSubmit={formSubmit}>
+                    <div style={{ paddingLeft: '38%', textAlign: "left"}}>
                             <div className="radio">
                                 <label>
                                     <input
@@ -270,12 +272,9 @@ const Widget = (props) => {
                                     Night
                                 </label>
                             </div>
-                            <div>
-                                Selected option is : {timeSlot}
-                            </div>
-                            <Button className="btn btn-default" type="submit">
-                                Submit
-                            </Button>
+                        </div>
+                            <br/>
+                            <button type="submit" className='widgetButton'>Submit</button>
                         </form>                
             </div>
         )
@@ -286,22 +285,9 @@ const Widget = (props) => {
     else if (status == "success")
     {
         return(
-            // <div style={{
-            //     backgroundImage: `url(${imgUrl})`
-            // }}>
-            // <Container style={{
-            //     backgroundImage: `url("https://www.cfacdn.com/img/order/menu/Online/Entrees/CFASpicySandwich_1080.png")`,
-            //     backgroundRepeat: `no-repeat`,
-            //     // backgroundAttachment: `fixed`,
-            //     backgroundPosition: `center`,
-            //     backgroundSize: `150% 200%`,
-            //     borderRadius: `20px`
-            //     }} className='App-login shadow-lg p-3 mb-5 bg-white rounded' minHeight='300px' maxWidth="500" borderStyle="solid">
-            //         <Box paddingTop='30'>
             <div onClick={clickWidget} className='widgetBox boxShadowImitation' style={{
                 backgroundImage: `url(${imgUrl})`
             }}>
-                {/* <Button variant="secondary">Test</Button> */}
                 <span className='widgetText'>
                     {itemName}
                 </span>
@@ -309,12 +295,9 @@ const Widget = (props) => {
                 <br/>
                 <br/>
                 <br/>
-                {/* <span className='orderText' style={{display: 'none'}} id="orderSpan">ORDER</span> */}
                 <br/>
             <button className='widgetButton' id="orderSpan">Add to Cart</button>
             </div>
-            // </Box>
-            // </Container>
         )
     }
 
@@ -323,8 +306,18 @@ const Widget = (props) => {
     else if (status == "fail")
     {
         return(
-            <div>
-                <h1>FAIL</h1>
+            <div className='widgetBox boxShadowImitation' style={{
+                backgroundImage: `none`}}>
+                <span className='widgetText'>
+                    Recommendation failed
+                </span>
+                <br/>
+                <br/>
+                <br/>
+                <br/>
+                <button className='widgetButton' style={{
+                      background: '#a83232'
+                }} onClick={requestRecommendation}>Retry</button>
             </div>
         )
     }
