@@ -7,6 +7,8 @@ from Models import RecommendationRequest, RecommendationEngine
 import os
 import globalStatus
 import printFormatting
+import sys
+import traceback
 
 # initializes the Flask app
 app = Flask(__name__)
@@ -91,6 +93,7 @@ def recommendItem():
         printFormatting.printError(str(e))
         # prints out all the fails from the engine
         printFormatting.printFinalStatus(globalStatus.statusArray)
+        printFormatting.printError(traceback.format_exc())
         # return the status array and back-up/default recommendation; this uses the same format for easier handling on the front-end
         # however, recommendations will just be an array with the single default recommendation
         # the values come from the configuration file rather than attempting to access the database since that's a likely cause of failure
