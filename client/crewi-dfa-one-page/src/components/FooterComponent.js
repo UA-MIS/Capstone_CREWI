@@ -10,18 +10,18 @@ export default class Header extends Component {
         return(
             <div class="social-container">
 
-                <a href="https://www.youtube.com/c/jamesqquick"
+                <a href="https://www.coolmathgames.com/0-papas-pizzeria"
                     className="youtube social">
                     <FontAwesomeIcon icon={faYoutube} size="2x" />
                 </a>
-                <a href="https://www.facebook.com/learnbuildteach/"
+                <a href="https://www.coolmathgames.com/0-papas-pizzeria"
                     className="facebook social">
                     <FontAwesomeIcon icon={faFacebook} size="2x" />
                 </a>
-                <a href="https://www.twitter.com/jamesqquick" className="twitter social">
+                <a href="https://www.coolmathgames.com/0-papas-pizzeria" className="twitter social">
                     <FontAwesomeIcon icon={faTwitter} size="2x" />
                 </a>
-                <a href="https://www.instagram.com/learnbuildteach"
+                <a href="https://www.coolmathgames.com/0-papas-pizzeria"
                     className="instagram social">
                     <FontAwesomeIcon icon={faInstagram} size="2x" />
                 </a>
