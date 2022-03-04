@@ -23,9 +23,12 @@ def welcome():
 
 @app.route('/recommendation/', methods=['POST'])
 def recommendItem():
+    printFormatting.printSuccess("Recommendation request received")
+    
     # this is the global status array; it needs to be in this scope in case making the request fails
     # do not initialize it again, the Status object is basically a singleton
     globalStatus.init()
+    printFormatting.printSuccess("Engine status initialized")
 
     try:
         # need to load environment variables for remainder use later
@@ -33,8 +36,8 @@ def recommendItem():
 
         # request.json will contain the request body; this saves it into a RecommendationRequest object
         userRequest = RecommendationRequest.RecommendationRequest(request.json)
-        
-        # making the engine; these are functionally static methods I figured instance methods would be a little clearer
+
+        # making the engine; these are functionally static methods but I figured instance methods would be a little clearer
         engine = RecommendationEngine.RecommendationEngine()
         
         # setting the time slot; even if its provided, this will confirm it (so if there's a logical conflict time will be prioritized)

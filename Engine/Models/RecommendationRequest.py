@@ -27,6 +27,7 @@ class RecommendationRequest:
             # the request will start without user and store ID; these will be looked up in the engine functions
             self.userId = dfaDatabase.lookupUser(self)
             self.storeId = dfaDatabase.lookupStore(self)
+            printFormatting.printSuccess("Request parsed successfully")
         except Exception as e:
             # printing issue and updating status
             printFormatting.printError(str(e))
