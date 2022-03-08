@@ -108,6 +108,7 @@ const Widget = (props) => {
             fetch(`https://api.geoapify.com/v1/geocode/reverse?lat=${latitude}&lon=${longitude}&apiKey=a9868a78354f43f0a3574acd600e2ceb`, requestOptions)
                 .then(response => response.json())
                 .then(result => {
+                    console.log(result);
                     // resolving this will basically make it go into addressPromise
                     resolve(result.features[0].properties.formatted);
                 }).catch(error => reject(error))
