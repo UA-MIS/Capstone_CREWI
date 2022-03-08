@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Grid, GridItem, Box, Container, Input, Text, InputGroup, InputRightElement, Button } from '@chakra-ui/react'
+import { Grid, GridItem, Box, Container, Input, Text, InputGroup, InputRightElement, Button, Avatar } from '@chakra-ui/react'
 
 //this will be our login component; it needs to let the user enter a username and password (not a priority at the moment),
 //validate the user (will do later), and send the username to the widget (which is what we're looking at now)
@@ -41,7 +41,11 @@ export default class LoginComponent extends Component {
         return(  
             
                         <div>
+                            {/* <img src="https://drive.google.com/uc?export=view&id=1nJsdIgsfY_YUqMAYwnLKGchTWXD_jtsj"/> */}
                             {/* <Text mb='10px'></Text> */}
+                            <div style = {{paddingBottom: 20}}>
+                                <Avatar size='lg'/>
+                            </div>
                             <InputGroup size='md'>
                                 <Input
                                     id="login" 
@@ -69,9 +73,9 @@ export default class LoginComponent extends Component {
                                 />
                             </InputGroup>
                             <br/>
-                            <Button colorScheme='blue' h='1.75rem' size='sm' onClick={this.updateParent}>
+                            <button className='widgetButton' id="orderSpan" onClick={this.updateParent}>
                                     Login
-                                    </Button>
+                                    </button>
                             {/* <input id="login" type="text"></input> */}
                             {/* <Button onClick={this.updateParent}>Login</Button> */}
                         </div>

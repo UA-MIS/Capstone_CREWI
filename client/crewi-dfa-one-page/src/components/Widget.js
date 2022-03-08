@@ -317,7 +317,7 @@ const Widget = (props) => {
                 <br/>
                 <br/>
                 <button className='widgetButton' style={{
-                      background: '#a83232'
+                    //   background: '#a83232'
                 }} onClick={requestRecommendation}>Retry</button>
             </div>
         )
