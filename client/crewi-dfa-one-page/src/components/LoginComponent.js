@@ -53,11 +53,25 @@ export default class LoginComponent extends Component {
                                     // onChange={handleChange}
                                 />
                                 <InputRightElement width='4.5rem'>
-                                    <Button colorScheme='blue' h='1.75rem' size='sm' onClick={this.updateParent}>
-                                    Login
-                                    </Button>
+
                                 </InputRightElement>
                             </InputGroup>
+                            <br/>
+                            <InputGroup size='md'>
+                                <Input
+                                    type='password'
+                                    isInvalid
+                                    errorBorderColor='black'
+                                    placeholder='Password'
+                                    size='md'
+                                    // value={value}
+                                    // onChange={handleChange}
+                                />
+                            </InputGroup>
+                            <br/>
+                            <Button colorScheme='blue' h='1.75rem' size='sm' onClick={this.updateParent}>
+                                    Login
+                                    </Button>
                             {/* <input id="login" type="text"></input> */}
                             {/* <Button onClick={this.updateParent}>Login</Button> */}
                         </div>

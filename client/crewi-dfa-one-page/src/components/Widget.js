@@ -53,6 +53,7 @@ const Widget = (props) => {
     //our first attempt at loading in time; it works, but we should probably reformat the time a little
     //if this fails, the exception will be caught in requestRec
     const loadCurrentTime = function() {
+        // throw 'exception'
         // I'd like to walk through this at some point to make sure edge cases are covered
         // return date + " " + localTime;
         Number.prototype.padLeft = function(base,chr){
@@ -244,7 +245,7 @@ const Widget = (props) => {
                                         name="dayPart"
                                         checked={timeSlot == "Morning"} 
                                         onChange={onValueChange}
-                                    />
+                                    />&nbsp;
                                     Morning
                                 </label>
                             </div>
@@ -256,7 +257,7 @@ const Widget = (props) => {
                                         name="dayPart"
                                         checked={timeSlot == "Afternoon"} 
                                         onChange={onValueChange}
-                                    />
+                                    />&nbsp;
                                     Afternoon
                                 </label>
                             </div>
@@ -268,7 +269,7 @@ const Widget = (props) => {
                                         name="dayPart"
                                         checked={timeSlot == "Night"}
                                         onChange={onValueChange}
-                                    />
+                                    />&nbsp;
                                     Night
                                 </label>
                             </div>
