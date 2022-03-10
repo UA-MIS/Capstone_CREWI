@@ -219,7 +219,7 @@ def calculateDistances(stores, request):
     except Exception as e:
         # print issue to terminal and update status
         printFormatting.printError(str(e))
-        globalStatus.addFail("CALCULATE_DISTANCES_FAIL")
+        globalStatus.addFail("CALCULATE_DISTANCE_FAIL")
         raise e
 
 

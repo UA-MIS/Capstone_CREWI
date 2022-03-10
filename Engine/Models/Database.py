@@ -184,7 +184,7 @@ class Database:
         except Exception as e:
             # print error for debugging, add fail to status array
             printFormatting.printError(str(e))
-            globalStatus.addFail("LOCATION_LOOKUP_FAIL")
+            globalStatus.addFail("ADDRESS_LOOKUP_FAIL")
             raise e
 
     # takes request, returns array of all the user's matching time slot transactions
