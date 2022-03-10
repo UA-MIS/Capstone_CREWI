@@ -9,8 +9,10 @@ export default class Header extends Component {
     render() {
         return(
             <div className="social-container" >
-                <Navbar.Brand href="#">Contact us l</Navbar.Brand>
-                <Navbar.Brand href="#">Nutrition & Allergens l</Navbar.Brand>
+                <Navbar.Brand href="#">Contact us</Navbar.Brand>
+                <Navbar.Brand>|</Navbar.Brand>
+                <Navbar.Brand href="#">Nutrition & Allergens</Navbar.Brand>
+                <Navbar.Brand>|</Navbar.Brand>
                 <Navbar.Brand href="#">Careers</Navbar.Brand>
 
                 <div style = {{paddingTop: 15}}>

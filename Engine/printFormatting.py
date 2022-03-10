@@ -1,4 +1,4 @@
-# module to print things more descriptively
+# PRINTFORMATTING.PY: Module to print things more descriptively
 
 # the error handling here won't raise an exception since printing isn't worth stopping the recommendation over
 # it also won't raise an issue because console printing is irrelevant to the widget

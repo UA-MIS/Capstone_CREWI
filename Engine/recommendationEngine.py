@@ -1,18 +1,17 @@
 from datetime import datetime
-from dotenv import load_dotenv
-from flask import abort
 from math import radians, cos, sin, asin, sqrt
+
+from Models import Item
+
 import os
 import printFormatting
 import globalStatus
-from Models import Item
 
+# RECOMMENDATIONENGINE.PY: Contains functions for engine logic
 
+# this takes a request and database object, returns the address of the closest location
 def recommendClosestLocation(userRequest, db):
     try:
-        # need to load environment variables for remainder use later
-        load_dotenv()
-
         # loading all the stores
         stores = db.loadStores()
 
@@ -24,18 +23,17 @@ def recommendClosestLocation(userRequest, db):
     except Exception as e:
         # if recommendation fails, use "" as the default value and print the issue; do not raise the exception since the engine should proceed
         printFormatting.printError(str(e))
-        globalStatus.addFail("RECOMMEND_CLOSEST_FAIL")
+        printFormatting.printWarning("Closest location recommendation has failed")
+        globalStatus.addIssue("RECOMMEND_CLOSEST_ISSUE")
         return ""
 
+# this takes a request and database object, returns the address of the user's most recent location
 def recommendRecentLocation(userRequest, db):
     try:
-        # need to load environment variables for remainder use later
-        load_dotenv()
-
         # if the user ID is 0, that means the user wasn't found, skip the lookups and log the error
         if userRequest.userId == 0:
-            printFormatting.printWarning("Unable to find the user for most recent location")
-            globalStatus.addFail("RECOMMEND_RECENT_FAIL")
+            printFormatting.printWarning("Recent location recommendation has failed")
+            globalStatus.addIssue("RECOMMEND_RECENT_ISSUE")
             return ""
 
         # finding the most recent store's ID using the user ID from the request
@@ -43,8 +41,8 @@ def recommendRecentLocation(userRequest, db):
 
         # if the store ID is 0, that means the user or transactions weren't found; log the error and skip the lookup
         if recentStoreId == 0:
-            printFormatting.printWarning("Unable to find a store for the user's most recent transaction")
-            globalStatus.addFail("RECOMMEND_RECENT_FAIL")
+            printFormatting.printWarning("Recent location recommendation has failed")
+            globalStatus.addIssue("RECOMMEND_RECENT_ISSUE")
             return ""
 
         # this method returns the address of the given store ID, so it can be returned directly
@@ -52,9 +50,11 @@ def recommendRecentLocation(userRequest, db):
     except Exception as e:
         # if recommendation fails, use "" as the default value and print the issue; do not raise the exception since the engine should proceed
         printFormatting.printError(str(e))
-        globalStatus.addFail("RECOMMEND_RECENT_FAIL")        
+        printFormatting.printWarning("Recent location recommendation has failed")
+        globalStatus.addIssue("RECOMMEND_RECENT_ISSUE")        
         return ""
 
+# takes in the address of closest and most recent locations; this will return the "best" location, which is basically closest if they match
 def determineBestLocation(closestLocation, recentLocation):
     try:
         # if the locations match, return that; otherwise, return a blank
@@ -63,12 +63,13 @@ def determineBestLocation(closestLocation, recentLocation):
     except Exception as e:
         # there's no way this ever throws an exception, but just to be safe it would return a blank
         printFormatting.printError(str(e))
-        globalStatus.addFail("RECOMMEND_BEST_FAIL")        
+        printFormatting.printWarning("Determination of best location has failed")        
+        globalStatus.addIssue("RECOMMEND_BEST_ISSUE")        
         return ""
 
+# this takes a request and database object and returns an array of item objects (sorted from best to worst recommendations)
 def recommendItems(userRequest, db):
     try:
-
         # setting the time slot; even if its provided, this will confirm it (so if there's a logical conflict time will be prioritized)
         userRequest.timeSlot = parseRequestTime(userRequest)
         
@@ -90,6 +91,7 @@ def recommendItems(userRequest, db):
             printFormatting.printWarning("Using fewer transactions than requested in configuration")
             globalStatus.addIssue("INSUFFICIENT_TRANSACTIONS_ISSUE")
 
+        # if no transactions were found, item can't be recommended; raising the exception will ultimately cause the default item to be used
         if len(transactions) == 0:
             printFormatting.printError("No transactions found; cannot proceed with analysis")
             globalStatus.addFail("ZERO_TRANSACTIONS_FAIL")
@@ -114,7 +116,8 @@ def recommendItems(userRequest, db):
     except Exception as e:
         # if recommending items fails, use the default recommendation
         printFormatting.printError(str(e))
-        globalStatus.addFail("RECOMMEND_ITEMS_FAIL")
+        printFormatting.printWarning("Item recommendation has failed, proceeding with default item")
+        globalStatus.addIssue("RECOMMEND_ITEMS_ISSUE")
         # making a one item array with the default item
         return [Item.Item(
             int(os.environ.get('Default_Recommendation_ID')),
@@ -123,20 +126,19 @@ def recommendItems(userRequest, db):
             int(os.environ.get('Default_Recommendation_Score'))
         )]
 
-
 # this takes in a request and returns the time slot
 def parseRequestTime(userRequest):
     try:
         # if time is blank, return the timeslot if given or the default if it's also missing
         if userRequest.time == "":
 
+            # log that time is missing
             printFormatting.printWarning("Time is missing from request")
             globalStatus.addIssue("MISSING_TIME_ISSUE")
             
             if userRequest.timeSlot != "":
                 return userRequest.timeSlot
             else:
-            
                 printFormatting.printWarning("Time and time slot are missing from request, using default time slot")
                 globalStatus.addIssue("MISSING_TIME_AND_TIMESLOT_ISSUE")
             
@@ -171,9 +173,6 @@ def parseRequestTime(userRequest):
 # takes in the transactions and request; this modifies the transactions directly so no return is needed
 def scoreTransactions(transactions, request):
     try:
-        # loading environment data
-        load_dotenv()
-
         # loops through all the transactions
         for index, transaction in enumerate(transactions):
             # transactions start with a score of a / (index + 1); a is configurable
@@ -194,9 +193,6 @@ def scoreTransactions(transactions, request):
 # takes in the stores and request; this modifies the stores directly so no return is needed
 def calculateDistances(stores, request):
     try:
-        # loading environment data
-        load_dotenv()
-
         # loops through all the stores and assigns each its distance
         # it uses a Haversine formula, pulled this code from: https://www.geeksforgeeks.org/haversine-formula-to-find-distance-between-two-points-on-a-sphere/
         for store in stores:
@@ -227,7 +223,7 @@ def calculateDistances(stores, request):
     except Exception as e:
         # print issue to terminal and update status
         printFormatting.printError(str(e))
-        globalStatus.addFail("CALCULATE_DISTANCES_FAIL")
+        globalStatus.addFail("CALCULATE_DISTANCE_FAIL")
         raise e
 
 
