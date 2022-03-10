@@ -26,5 +26,13 @@ pip install mysql-connector-python
 
 add .env file
 
+Here's a link to a UA box folder for the project (requires a UA sign-in):
+https://alabama.box.com/s/y78iqm7o7lw3c6f8b9s9uoflzwa2diu8
+
+Here's a link directly to the .env file (also requires a UA sign-in):
+https://alabama.box.com/s/ppldcpifoo139sje8l4y91qwch3afdv6
+
+
+
 
 Also, you're going to need the .env file, but we obviously can't put the database credentials in the code. Message me and I'll send you the variables; make sure you name the file ".env" in the engine folder so that the .gitignore won't commit it.
