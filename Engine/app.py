@@ -18,10 +18,28 @@ app = Flask(__name__)
 CORS(app)
 
 #specifying the route and methods allowed; I think we'll just do GET, maybe something for logging in?
-@app.route('/hello/', methods=['GET', 'POST'])
+@app.route('/', methods=['GET', 'POST'])
 #I don't think the name of the function matters? I have no clue tbh, I guess they don't matter in .NET either...
 def welcome():
-    return "update"
+    return """
+    <h1>Routes:</h1>
+    <hr>
+    <h3>/</h3>
+    <p>Routes to this page</p>
+    <hr>
+    <h3>/recommendation</h3>
+    <p>Requests item and location recommendations:</p>
+    <p><strong>METHOD: </strong>POST<br></p>
+    <strong>REQUEST BODY: </strong><br>
+    &emsp;{<br>
+        &emsp;&emsp;"username": &emsp;string,<br>
+        &emsp;&emsp;"time": &emsp;&emsp;&emsp;datetime, &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<em>(YYYY-DD-MM hh:mm:ss, note that this is 24-hour time)</em><br>
+        &emsp;&emsp;"timeSlot": &nbsp;&nbsp;&emsp;string, &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<em>(should be "Morning", "Afternoon", or "Night")</em><br>
+        &emsp;&emsp;"latitude": &nbsp;&nbsp;&nbsp;&emsp;float, &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<em>(6 decimal places preferred but not required)</em><br>
+        &emsp;&emsp;"longitude": &emsp;float, &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<em>(6 decimal places preferred but not required)</em><br>
+    &emsp;}
+    <hr>
+    """
 
 @app.route('/recommendation/', methods=['POST'])
 def recommendItemsAndLocations():
