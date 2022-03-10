@@ -16,7 +16,7 @@ class DfaDatabase:
 
             self.host = os.environ.get('Database_Host')
             self.username = os.environ.get('Database_Username')
-            self.password = os.environ.get('Databaes_Password')
+            self.password = os.environ.get('Database_Password')
             self.database = os.environ.get('Database_Database')
         except Exception as e:
             # print issue to terminal and update status
