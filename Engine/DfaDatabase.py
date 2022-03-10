@@ -96,8 +96,8 @@ class DfaDatabase:
             globalStatus.addFail("USER_LOOKUP_FAIL")
             raise e
 
-    # takes request, returns user id or 0 if user not found
-    def lookupStore(self, request):
+    # takes request, returns the user's most recent store ID
+    def lookupRecentStore(self, request):
         try:
             # loading environment data
             load_dotenv()
@@ -115,9 +115,11 @@ class DfaDatabase:
             # prepared SQL statement; selecting the store ID that has the given location (not to be confused with store name)
             myCursor.execute("""
                 SELECT Store_ID
-                FROM DFA_Store
-                WHERE Store_Location = %(location)s
-            """, { 'location': request.location })
+                FROM DFA_Transaction
+                WHERE User_ID = %(userId)s
+                ORDER BY Transaction_Time DESC
+                LIMIT 1                
+            """, { 'userId': request.userId })
 
             # fetching scalar from database
             dbResult = myCursor.fetchone()
@@ -127,13 +129,13 @@ class DfaDatabase:
 
             # return query results if it wasn't NULL (None in Python means NULL in SQL)
             if dbResult is not None:
-                printFormatting.printSuccess("Location matched a store in the database")
+                printFormatting.printSuccess("Found user's most recent location")
                 # result is an array for whatever reason, need to pull the single element out
                 return dbResult[0]
 
-            # if result was NULL, return 0 to signal store not found; also add status indicating bad location
-            printFormatting.printWarning("Location does not match any store in the database")
-            globalStatus.addIssue("BAD_LOCATION_ISSUE")
+            
+            printFormatting.printWarning("Could not find user's most recent location")
+            globalStatus.addIssue("RECENT_LOCATION_ISSUE")
             return 0
         except Exception as e:
             # print error for debugging, add fail to status array

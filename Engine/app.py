@@ -3,6 +3,7 @@ from dotenv import load_dotenv
 from flask_cors import CORS
 import DfaDatabase
 from Models import RecommendationRequest, RecommendationEngine
+from Models import Store
 
 import os
 import globalStatus
@@ -49,11 +50,18 @@ def recommendItem():
         engine.calculateDistances(stores, userRequest)        
 
         closestLocation = stores[0]
+        recentLocation = Store.Store(0, "", float(0), float(0))
 
-        print(str(userRequest.latitude) + ' ' + str(userRequest.longitude))
+        recentStoreId = db.lookupRecentStore(userRequest)
 
         for store in stores:
-            print(store)
+            if store.id == recentStoreId:
+                recentLocation = store
+        
+        bestAddress = ""
+
+        if (closestLocation.address == recentLocation.address):
+            bestAddress = closestLocation.address
 
         # setting the time slot; even if its provided, this will confirm it (so if there's a logical conflict time will be prioritized)
         userRequest.timeSlot = engine.parseRequestTime(userRequest)
@@ -100,9 +108,11 @@ def recommendItem():
         return jsonify({
             "statuses": globalStatus.statusArray,
             "recommendations": [item.__dict__ for item in items],
-            "bestLocation": "BEST LOC",
-            "closestLocation": closestLocation.id,
-            "recentLocation": "RECENT LOC"
+            "locations": {
+                "bestLocation": bestAddress,
+                "closestLocation": closestLocation.address,
+                "recentLocation": recentLocation.address
+            }
         })
     # if any full failures occur during the recommendation process, print the error and return the status array and default rec for the widget
     except Exception as e:
