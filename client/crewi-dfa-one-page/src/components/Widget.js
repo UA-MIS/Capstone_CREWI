@@ -7,6 +7,10 @@ const Widget = (props) => {
     const [timeSlot, setTimeSlot] = useState("");
     const [imgUrl, setImgUrl] = useState("");
     const [itemName, setItemName] = useState("");
+    const [closestLocation, setClosestLocation] = useState("");
+    const [recentLocation, setRecentLocation] = useState("");
+    const [bestLocation, setBestLocation] = useState("");
+
 
     let time = "";
     let timeStatus = "";
@@ -40,8 +44,11 @@ const Widget = (props) => {
                 // logs the result, updates the state (which will update the DOM)
                 console.log(result);
 
-                setImgUrl(result.recommendations[0].imgUrl);
-                setItemName(result.recommendations[0].name);
+                setImgUrl(result.items[0].imgUrl);
+                setItemName(result.items[0].name);
+                setClosestLocation(result.locations.closestLocation);
+                setRecentLocation(result.locations.recentLocation);
+                setBestLocation(result.locations.bestLocation);
 
                 setStatus("success");
             }).catch(error => {
@@ -273,6 +280,50 @@ const Widget = (props) => {
 
     else if (status == "success")
     {
+        // logic for handling the location display; swap out the specific HTML as needed
+        // also there's gotta be a better way to do this logic
+        let locationHtml;
+        
+        if (bestLocation) {
+            // if there's a best location, show it (means closest and most recent were the same and not blank)
+            locationHtml = (<div>
+                <span className='widgetText'>
+                    {bestLocation}
+                </span>
+            </div>)
+        } else if (closestLocation && recentLocation) {
+            // if there isn't a best location (b/c of the 'else') but closest and recent are truthy, they must be different (show both)
+            locationHtml = (<div>
+                <span className='widgetText'>
+                    {closestLocation}
+                </span>
+                <span className='widgetText'>
+                    {recentLocation}
+                </span>
+            </div>)
+        } else if (closestLocation) {
+            // this happens if closest and recent were different, but recent was falsy, meaning it was blank (show closest only)
+            locationHtml = (<div>
+                <span className='widgetText'>
+                    {closestLocation}
+                </span>
+            </div>)
+        } else if (recentLocation) {
+            // this happens if closest and recent were different, but closest was falsy, meaning it was blank (show recent only)
+            locationHtml = (<div>
+                <span className='widgetText'>
+                    {recentLocation}
+                </span>
+            </div>)
+        } else {
+            // this means best, recent, and closest locations were all falsy (very likely blank); show an error or something, probably a reset button too
+            locationHtml = (<div>
+                <span className='widgetText'>
+                    LOCATION SERVICES FAILED
+                </span>
+            </div>)
+        }
+
         return(
             <div onClick={clickWidget} className='widgetBox boxShadowImitation' style={{
                 backgroundImage: `url(${imgUrl})`
@@ -282,6 +333,7 @@ const Widget = (props) => {
                 </span>
                 <br/>
                 <br/>
+                {locationHtml}
                 <br/>
                 <br/>
                 <br/>

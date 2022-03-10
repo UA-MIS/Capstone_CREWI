@@ -81,7 +81,7 @@ def recommendItemsAndLocations():
         # returns the statuses and recommendations; recommendations[0] will be the top recommendation
         return jsonify({
             "statuses": globalStatus.statusArray,
-            "recommendations": [item.__dict__ for item in items],
+            "items": [item.__dict__ for item in items],
             "locations": {
                 "bestLocation": bestLocation,
                 "closestLocation": closestLocation,
