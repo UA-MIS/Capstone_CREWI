@@ -2,7 +2,7 @@ from flask import Flask, request, jsonify, abort
 from dotenv import load_dotenv
 from flask_cors import CORS
 import DfaDatabase
-from Models import RecommendationRequest, RecommendationEngine
+from Models import RecommendationRequest
 from Models import Store
 
 import os
@@ -10,6 +10,7 @@ import globalStatus
 import printFormatting
 import sys
 import traceback
+import recommendationEngine
 
 # initializes the Flask app
 app = Flask(__name__)
@@ -23,7 +24,7 @@ def welcome():
     return "update"
 
 @app.route('/recommendation/', methods=['POST'])
-def recommendItem():
+def recommendItemsAndLocations():
     printFormatting.printSuccess("Recommendation request received")
     
     # this is the global status array; it needs to be in this scope in case making the request fails
@@ -37,87 +38,30 @@ def recommendItem():
 
         # request.json will contain the request body; this saves it into a RecommendationRequest object
         userRequest = RecommendationRequest.RecommendationRequest(request.json)
-
-        # making the engine; these are functionally static methods but I figured instance methods would be a little clearer
-        engine = RecommendationEngine.RecommendationEngine()
         
         # making database object
         db = DfaDatabase.DfaDatabase()
 
-        # loading all the stores
-        stores = db.loadStores()
+        # recommending closest location; will be the address or a blank string if something goes wrong
+        closestLocation = recommendationEngine.recommendClosestLocation(userRequest, db)
 
-        # assigning each store its distance from the user; returns the list sorted from nearest to farthest
-        engine.calculateDistances(stores, userRequest)        
-
-        # closest store is the first one in the array; making a blank store for recent location
-        closestLocation = stores[0]
-        recentLocation = Store.Store(0, "", float(0), float(0))
-
-        # finding the most recent store's ID using the user ID from the request
-        recentStoreId = db.lookupRecentStore(userRequest)
-
-        # linear search to find which store matches the most recent ID and making that store the recentLocation
-        for store in stores:
-            if store.id == recentStoreId:
-                recentLocation = store
+        # recommending most recent location; will be the address or a blank string if something goes wrong
+        recentLocation = recommendationEngine.recommendRecentLocation(userRequest, db)
         
-        # best address should be blank unless the closest and most recent stores match
-        bestAddress = ""
+        # best address should be blank unless the closest and most recent stores match; this function handles it
+        bestLocation = recommendationEngine.determineBestLocation(closestLocation, recentLocation)
 
-        # checking to see if the two locations match; this could be done with any unique field (ID, coordinates, etc.)
-        if (closestLocation.address == recentLocation.address):
-            bestAddress = closestLocation.address
-
-        # setting the time slot; even if its provided, this will confirm it (so if there's a logical conflict time will be prioritized)
-        userRequest.timeSlot = engine.parseRequestTime(userRequest)
-        
-        # making empty transaction array
-        transactions = []
-        
-        # start with transactions from the current user that match day part
-        transactions = db.loadUserTransactions(userRequest)
-
-        # calculating the remainder: the total number to use minus the number that matched the user
-        remainder = int(os.environ.get('Transaction_Count')) - len(transactions)
-
-        # adding the non-user transactions to the user ones; loadOtherTransactions takes in the remainder to pull the right number
-        # at this point, transactions contains ordered transactions from the user, then ordered from other users, all matching day part
-        transactions.extend(db.loadOtherTransactions(userRequest, remainder))
-
-        # if fewer than preferred transactions were loaded (because not enough were in the time slot), add an issue
-        if (len(transactions) < int(os.environ.get('Transaction_Count'))):
-            printFormatting.printWarning("Using fewer transactions than requested in configuration")
-            globalStatus.addIssue("INSUFFICIENT_TRANSACTIONS_ISSUE")
-
-        if len(transactions) == 0:
-            printFormatting.printError("No transactions found; cannot proceed with analysis")
-            globalStatus.addFail("ZERO_TRANSACTIONS_FAIL")
-            raise Exception("No transactions found; cannot proceed with analysis")
-
-        # scoring the transactions; this is pass by reference so nothing is returned, the transactions are directly updated
-        engine.scoreTransactions(transactions, userRequest)
-
-        # initializing item array
-        items = []
-        
-        # this will return items with ID and scores, sorted from highest to lowest score (items[0] is the top recommendation)
-        items = engine.aggregateScores(transactions)
-
-        # removing the lower scoring items; the remaining items will be returned as the recommendations
-        items = items[:int(os.environ.get('Recommendation_Count'))]
-
-        # this will modify the items directly by adding their URLs and scores
-        db.lookupItems(items)
+        # recommending items; if something goes wrong, it'll be just the default item
+        items = recommendationEngine.recommendItems(userRequest, db)
 
         # returns the statuses and recommendations; recommendations[0] will be the top recommendation
         return jsonify({
             "statuses": globalStatus.statusArray,
             "recommendations": [item.__dict__ for item in items],
             "locations": {
-                "bestLocation": bestAddress,
-                "closestLocation": closestLocation.address,
-                "recentLocation": recentLocation.address
+                "bestLocation": bestLocation,
+                "closestLocation": closestLocation,
+                "recentLocation": recentLocation
             }
         })
     # if any full failures occur during the recommendation process, print the error and return the status array and default rec for the widget
@@ -129,7 +73,7 @@ def recommendItem():
         printFormatting.printFinalStatus(globalStatus.statusArray)
         printFormatting.printError(traceback.format_exc())
         # return the status array and back-up/default recommendation; this uses the same format for easier handling on the front-end
-        # however, recommendations will just be an array with the single default recommendation and a default location
+        # however, recommendations will just be an array with the single default recommendation (no default location, because that's useless)
         # the values come from the configuration file rather than attempting to access the database since that's a likely cause of failure
         return jsonify({
             "statuses": globalStatus.statusArray,
@@ -140,9 +84,9 @@ def recommendItem():
                 "score": int(os.environ.get('Default_Recommendation_Score'))
             }],
             "locations": {
-                "bestLocation": os.environ.get('Default_Location_Address'),
-                "closestLocation": "ERROR",
-                "recentLocation": "ERROR"
+                "bestLocation": "",
+                "closestLocation": "",
+                "recentLocation": ""
             }
         })
 

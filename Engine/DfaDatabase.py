@@ -22,17 +22,24 @@ class DfaDatabase:
             # print issue to terminal and update status
             printFormatting.printError(str(e))
             globalStatus.addFail("DATABASE_INIT_FAIL")
+            raise e
 
     # this will connect to the database, returns a MySQLConnection object
     def establishConnection(self):
-        return mysql.connector.connect(
-            host = self.host,
-            username = self.username,
-            password = self.password,
-            database = self.database
-        )
+        try:
+            return mysql.connector.connect(
+                host = self.host,
+                username = self.username,
+                password = self.password,
+                database = self.database
+            )
+        except Exception as e:
+            # print issue to terminal and update status
+            printFormatting.printError(str(e))
+            globalStatus.addFail("DATABASE_CONNECTION_FAIL")
+            raise e
 
-    # loads stores, returns an array of stores
+    # loads stores, returns an array of stores for distance calculations
     def loadStores(self):
         try:
             # loading environment data
@@ -41,20 +48,21 @@ class DfaDatabase:
             # opening the connection
             myConnection = DfaDatabase.establishConnection(self)
 
-            # executing the select statement
+            # making a cursor
             myCursor = myConnection.cursor()
-            # prepared SQL statement; selecting the most recent remainder transactions from other users that are in the time slot
+            # selecting all the relevant data from the store table
             myCursor.execute("""
                 SELECT Store_ID, Store_Location, Latitude, Longitude
                 FROM DFA_Store
             """)
 
-            # fetching scalar from database
+            # loading all results into a results object
             dbResults = myCursor.fetchall()
 
             # closing connection
             myConnection.close()
 
+            # initializing empty store array
             storeArray = []
 
             # adding stores to the store array
@@ -118,9 +126,9 @@ class DfaDatabase:
             # opening the connection
             myConnection = DfaDatabase.establishConnection(self)
 
-            # executing the select statement
+            # making cursor object
             myCursor = myConnection.cursor()
-            # prepared SQL statement; selecting the store ID that has the given location (not to be confused with store name)
+            # prepared SQL statement; selecting the store ID from the user's most recent transaction
             myCursor.execute("""
                 SELECT Store_ID
                 FROM DFA_Transaction
@@ -141,10 +149,50 @@ class DfaDatabase:
                 # result is an array for whatever reason, need to pull the single element out
                 return dbResult[0]
 
-            
+            # return 0 to indicate store not found, meaning the user doesn't exist or has no transactions
             printFormatting.printWarning("Could not find user's most recent location")
             globalStatus.addIssue("RECENT_LOCATION_ISSUE")
             return 0
+        except Exception as e:
+            # print error for debugging, add fail to status array
+            printFormatting.printError(str(e))
+            globalStatus.addFail("LOCATION_LOOKUP_FAIL")
+            raise e
+
+    # takes request, returns the address of the given store ID
+    def lookupStoreId(self, storeId):
+        try:
+            # loading environment data
+            load_dotenv()
+
+            # opening the connection
+            myConnection = DfaDatabase.establishConnection(self)
+
+            # making cursor object
+            myCursor = myConnection.cursor()
+            # prepared SQL statement; selecting the address from the given store ID
+            myCursor.execute("""
+                SELECT Store_Location
+                FROM DFA_Store
+                WHERE Store_ID = %(storeId)s                
+            """, { 'storeId': storeId })
+
+            # fetching scalar from database
+            dbResult = myCursor.fetchone()
+
+            # closing connection
+            myConnection.close()
+
+            # return query results if it wasn't NULL (None in Python means NULL in SQL)
+            if dbResult is not None:
+                printFormatting.printSuccess("Looked up store address")
+                # result is an array for whatever reason, need to pull the single element out
+                return dbResult[0]
+
+            # return blank to indicate store not found, meaning the user doesn't exist or has no transactions
+            printFormatting.printWarning("Could not find user's most recent location")
+            globalStatus.addIssue("RECENT_LOCATION_ISSUE")
+            return ""
         except Exception as e:
             # print error for debugging, add fail to status array
             printFormatting.printError(str(e))
@@ -302,7 +350,7 @@ class DfaDatabase:
             # prepared SQL statement; selecting the ID, name, and URL for items in the ID array
             myCursor.execute("""
                 SELECT Item_ID, Item_Name, Menu_Pic
-                FROM DFA_Menu
+                FROM DFA_Mnu
                 WHERE Item_ID IN """ + itemIds + """
                 ORDER BY Item_ID""")
 

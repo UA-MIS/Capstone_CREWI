@@ -20,8 +20,14 @@ class RecommendationRequest:
                 self.time = ""
 
             self.timeSlot = userRequest["timeSlot"]
-            self.latitude = userRequest["latitude"]
-            self.longitude = userRequest["longitude"]
+            
+            # if coordinates are missing, go on without them but flag it as an issue (recommending closest will fail)
+            try:
+                self.latitude = userRequest["latitude"]
+                self.longitude = userRequest["longitude"]
+            except:
+                printFormatting.printWarning("Proceeding without user coordinates")
+                globalStatus.addIssue("MISSING_COORDINATES_ISSUE")
 
             dfaDatabase = DfaDatabase.DfaDatabase()
 
