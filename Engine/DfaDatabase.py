@@ -350,7 +350,7 @@ class DfaDatabase:
             # prepared SQL statement; selecting the ID, name, and URL for items in the ID array
             myCursor.execute("""
                 SELECT Item_ID, Item_Name, Menu_Pic
-                FROM DFA_Mnu
+                FROM DFA_Menu
                 WHERE Item_ID IN """ + itemIds + """
                 ORDER BY Item_ID""")
 
