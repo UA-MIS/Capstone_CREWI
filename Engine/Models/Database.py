@@ -1,19 +1,19 @@
-from dotenv import load_dotenv
-from flask import abort
-import os
-import mysql.connector
-import globalStatus
-import printFormatting
 from Models import Transaction
 from Models import Item
 from Models import Store
 
-class DfaDatabase:
-    # the database object holds the database credentials
+import os
+import mysql.connector
+import globalStatus
+import printFormatting
+
+# DATABASE.PY: Class that handles accessing the database; alter the environment variables to target another MySQL DB
+
+class Database:
+    # this is the constructor; the database object holds the database credentials
     def __init__(self):
         try:
-            load_dotenv()
-
+            # reading credentials from the environment file
             self.host = os.environ.get('Database_Host')
             self.username = os.environ.get('Database_Username')
             self.password = os.environ.get('Database_Password')
@@ -42,11 +42,8 @@ class DfaDatabase:
     # loads stores, returns an array of stores for distance calculations
     def loadStores(self):
         try:
-            # loading environment data
-            load_dotenv()
-
             # opening the connection
-            myConnection = DfaDatabase.establishConnection(self)
+            myConnection = Database.establishConnection(self)
 
             # making a cursor
             myCursor = myConnection.cursor()
@@ -80,11 +77,8 @@ class DfaDatabase:
     # takes request, returns user id or 0 if user not found
     def lookupUser(self, request):
         try:
-            # loading environment data
-            load_dotenv()
-
             # opening the connection
-            myConnection = DfaDatabase.establishConnection(self)
+            myConnection = Database.establishConnection(self)
 
             # executing the select statement
             myCursor = myConnection.cursor()
@@ -120,11 +114,8 @@ class DfaDatabase:
     # takes request, returns the user's most recent store ID
     def lookupRecentStore(self, request):
         try:
-            # loading environment data
-            load_dotenv()
-
             # opening the connection
-            myConnection = DfaDatabase.establishConnection(self)
+            myConnection = Database.establishConnection(self)
 
             # making cursor object
             myCursor = myConnection.cursor()
@@ -162,11 +153,8 @@ class DfaDatabase:
     # takes request, returns the address of the given store ID
     def lookupStoreId(self, storeId):
         try:
-            # loading environment data
-            load_dotenv()
-
             # opening the connection
-            myConnection = DfaDatabase.establishConnection(self)
+            myConnection = Database.establishConnection(self)
 
             # making cursor object
             myCursor = myConnection.cursor()
@@ -202,9 +190,6 @@ class DfaDatabase:
     # takes request, returns array of all the user's matching time slot transactions
     def loadUserTransactions(self, request):
         try:
-            # loading environment data
-            load_dotenv()
-
             # for morning and afternoon, time should be after start and before end
             # for night, time should be after start or before end (because night has the midnight cutoff)
             timeCondition = "and"
@@ -222,7 +207,7 @@ class DfaDatabase:
                 timeCondition = "or"
 
             # opening the connection
-            myConnection = DfaDatabase.establishConnection(self)
+            myConnection = Database.establishConnection(self)
 
             # executing the select statement
             myCursor = myConnection.cursor()
@@ -267,9 +252,6 @@ class DfaDatabase:
     # takes request, returns array of all the user's matching time slot transactions
     def loadOtherTransactions(self, request, remainder):
         try:
-            # loading environment data
-            load_dotenv()
-
             # for morning and afternoon, time should be after start and before end
             # for night, time should be after start or before end (because night has the midnight cutoff)
             timeCondition = "and"
@@ -287,7 +269,7 @@ class DfaDatabase:
                 timeCondition = "or"
 
             # opening the connection
-            myConnection = DfaDatabase.establishConnection(self)
+            myConnection = Database.establishConnection(self)
 
             # executing the select statement
             myCursor = myConnection.cursor()
@@ -339,11 +321,8 @@ class DfaDatabase:
             # returns tuple of item IDs (for instance, (1, 2, 3)) and converts it to a string so it can be concatenated into the query
             itemIds = str(Item.getIdTuple(items))
 
-            # loading environment data
-            load_dotenv()
-
             # opening the connection
-            myConnection = DfaDatabase.establishConnection(self)
+            myConnection = Database.establishConnection(self)
 
             # executing the select statement
             myCursor = myConnection.cursor()

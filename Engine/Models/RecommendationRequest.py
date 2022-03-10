@@ -1,11 +1,12 @@
-from flask import abort
 import datetime
-import DfaDatabase
 import printFormatting
 import globalStatus
 
+# RECOMMENDATIONREQUEST.PY: Class for holding request data, this is just a constructor
+
 class RecommendationRequest:
-    def __init__(self, userRequest):
+    # constructor takes in "userRequest", which is the JSON object that came from the POST request body; also takes a db so that it can look up the user ID
+    def __init__(self, userRequest, db):
         #if the user's request is in the right format, it'll make the rec request object
         try:
             self.username = userRequest["username"]
@@ -29,9 +30,8 @@ class RecommendationRequest:
                 printFormatting.printWarning("Proceeding without user coordinates")
                 globalStatus.addIssue("MISSING_COORDINATES_ISSUE")
 
-            dfaDatabase = DfaDatabase.DfaDatabase()
-
-            self.userId = dfaDatabase.lookupUser(self)
+            # attempts to find user ID immediately based off of username
+            self.userId = db.lookupUser(self)
             printFormatting.printSuccess("Request parsed successfully")
         except Exception as e:
             # printing issue and updating status
