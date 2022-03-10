@@ -40,11 +40,23 @@ def recommendItem():
         # making the engine; these are functionally static methods but I figured instance methods would be a little clearer
         engine = RecommendationEngine.RecommendationEngine()
         
-        # setting the time slot; even if its provided, this will confirm it (so if there's a logical conflict time will be prioritized)
-        userRequest.timeSlot = engine.parseRequestTime(userRequest)
-
         # making database object
         db = DfaDatabase.DfaDatabase()
+
+        # finding closest store ID
+        stores = db.loadStores()
+
+        engine.calculateDistances(stores, userRequest)        
+
+        closestLocation = stores[0]
+
+        print(str(userRequest.latitude) + ' ' + str(userRequest.longitude))
+
+        for store in stores:
+            print(store)
+
+        # setting the time slot; even if its provided, this will confirm it (so if there's a logical conflict time will be prioritized)
+        userRequest.timeSlot = engine.parseRequestTime(userRequest)
         
         # making empty transaction array
         transactions = []
@@ -87,7 +99,10 @@ def recommendItem():
         # returns the statuses and recommendations; recommendations[0] will be the top recommendation
         return jsonify({
             "statuses": globalStatus.statusArray,
-            "recommendations": [item.__dict__ for item in items]
+            "recommendations": [item.__dict__ for item in items],
+            "bestLocation": "BEST LOC",
+            "closestLocation": closestLocation.id,
+            "recentLocation": "RECENT LOC"
         })
     # if any full failures occur during the recommendation process, print the error and return the status array and default rec for the widget
     except Exception as e:
@@ -102,12 +117,15 @@ def recommendItem():
         # the values come from the configuration file rather than attempting to access the database since that's a likely cause of failure
         return jsonify({
             "statuses": globalStatus.statusArray,
-            "recommendations": [{
+            "items": [{
                 "id": int(os.environ.get('Default_Recommendation_ID')),
                 "imgUrl": os.environ.get('Default_Recommendation_ImageURL'),
                 "name": os.environ.get('Default_Recommendation_Name'),
                 "score": int(os.environ.get('Default_Recommendation_Score'))
-            }]
+            }],
+            "bestLocation": "BEST LOC",
+            "closestLocation": "CLOSEST LOC",
+            "recentLocation": "RECENT LOC"
         })
 
 #from the article "This line ensures that our Flask app runs only when it is executed in the main file and not when it is imported in some other file"

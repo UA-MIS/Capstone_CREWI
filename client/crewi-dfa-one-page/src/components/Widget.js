@@ -18,7 +18,7 @@ const Widget = (props) => {
     }, [username])
 
     // fetches the recommendation, might need to be async? doesn't look like it does at the moment
-    const fetchRecommendation = function(username, time, timeSlot, location) {
+    const fetchRecommendation = function(username, time, timeSlot, latitude, longitude) {
         // fix this hard-coded URL later
         fetch(`http://localhost:8000/recommendation/`, {
             // GET can't take a request body, apparently
@@ -31,7 +31,8 @@ const Widget = (props) => {
               username: username,
               time: time,
               timeSlot: timeSlot,
-              location: location
+              latitude: latitude,
+              longitude: longitude
             })
         })
             .then(response => response.json())
@@ -75,18 +76,16 @@ const Widget = (props) => {
     const loadCurrentLocation = async function() {
         try {
             // result will be a Geolocation object; await means execution will pause here until finished
-            let result = await getCoordinates();
-            
-            // request options were needed for the API, we'd only ever need get anyways
-            var requestOptions = {
-                method: 'GET',
-            };        
+            let result = await getCoordinates();   
 
-            // returns the address to requestRecommendation, takes in coordinates and options
-            return await getAddress(result.coords.latitude, result.coords.longitude, requestOptions);
+            console.log("LOAD CURRENT LOCATION:");
+            console.log(result);
+
+            // returns the coordinates to requestRecommendation, takes in coordinates and options
+            return [result.coords.latitude, result.coords.longitude]
         } catch {
             setStatus("no-location loading");
-            return "";
+            return [0, 0];
         }
     }
 
@@ -99,23 +98,6 @@ const Widget = (props) => {
         
         // returns coords once the promise is resolved/rejected, which happens when geolocating is complete
         return await coordinatePromise;
-    }
-
-    // takes coordinates, returns street address
-    const getAddress = async function(latitude, longitude, requestOptions) {
-        // need to add a reject procedure, small edits to be made to this
-        const addressPromise = new Promise((resolve, reject) => {
-            fetch(`https://api.geoapify.com/v1/geocode/reverse?lat=${latitude}&lon=${longitude}&apiKey=a9868a78354f43f0a3574acd600e2ceb`, requestOptions)
-                .then(response => response.json())
-                .then(result => {
-                    console.log(result);
-                    // resolving this will basically make it go into addressPromise
-                    resolve(result.features[0].properties.formatted);
-                }).catch(error => reject(error))
-        });
-
-        // returns resolved/rejected result, should be the formatted address if resolved
-        return await addressPromise;
     }
 
     //this runs whenever state or props are updated; it updates token so that the useEffect above will run
@@ -157,10 +139,15 @@ const Widget = (props) => {
                 try {
                     // grabs location (meaning street address) and waits here so that fetchRec won't get called until this done
                     // loadCurrentLocation needs to return a blank or sentinel value into location if something fails
-                    let location = await loadCurrentLocation();
+                    let coordinates = await loadCurrentLocation();
+                    const latitude = coordinates[0];
+                    const longitude = coordinates[1];
     
+                    console.log("IN FETCH:");
+                    console.log(`${latitude} ${longitude}`)
+
                     // this will actually grab the rec and update the status for the DOM
-                    fetchRecommendation(username, time, timeSlot, location);
+                    fetchRecommendation(username, time, timeSlot, latitude, longitude);
                 
                 } catch (error) {
                     console.log(error);

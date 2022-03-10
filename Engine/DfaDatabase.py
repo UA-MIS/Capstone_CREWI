@@ -6,8 +6,51 @@ import globalStatus
 import printFormatting
 from Models import Transaction
 from Models import Item
+from Models import Store
 
 class DfaDatabase:
+    # loads stores, returns an array of stores
+    def loadStores(self):
+        try:
+            # loading environment data
+            load_dotenv()
+
+            # opening the connection; may want to look into using a connection string dictionary later
+            myConnection = mysql.connector.connect(
+                host = os.environ.get('DFA_Host'),
+                username = os.environ.get('DFA_Username'),
+                password = os.environ.get('DFA_Password'),
+                database = os.environ.get('DFA_Database')
+            )
+
+            # executing the select statement
+            myCursor = myConnection.cursor()
+            # prepared SQL statement; selecting the most recent remainder transactions from other users that are in the time slot
+            myCursor.execute("""
+                SELECT Store_ID, Store_Location, Latitude, Longitude
+                FROM DFA_Store
+            """)
+
+            # fetching scalar from database
+            dbResults = myCursor.fetchall()
+
+            # closing connection
+            myConnection.close()
+
+            storeArray = []
+
+            # adding stores to the store array
+            for store in dbResults:
+                storeArray.append(Store.Store(store[0], store[1], store[2], store[3]))
+
+            printFormatting.printSuccess("Loaded stores")
+            return storeArray
+        except Exception as e:
+            # print error for debugging, add fail to status array
+            printFormatting.printError(str(e))
+            globalStatus.addFail("STORE_LOADING_FAIL")
+            raise e            
+
     # takes request, returns user id or 0 if user not found
     def lookupUser(self, request):
         try:

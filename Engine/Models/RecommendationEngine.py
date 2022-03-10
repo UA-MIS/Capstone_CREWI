@@ -1,6 +1,7 @@
 from datetime import datetime
 from dotenv import load_dotenv
 from flask import abort
+from math import radians, cos, sin, asin, sqrt
 import os
 import printFormatting
 import globalStatus
@@ -66,8 +67,6 @@ class RecommendationEngine:
 
                 # if the transaction does not match the request user, reduce the score by a "reducer" (just a multiplier that is less than 1, not a technical term; configurable)
                 if transaction.userId != request.userId : transaction.score *= float(os.environ.get('Other_User_Reducer'))
-                # if the request location matches the transaction's store's location, increase the score by a multiplier (configurable)
-                if transaction.storeId == request.storeId : transaction.score *= float(os.environ.get('Matching_Store_Multiplier'))
 
             printFormatting.printSuccess("Scored transactions")
         except Exception as e:
@@ -75,6 +74,41 @@ class RecommendationEngine:
             printFormatting.printError(str(e))
             globalStatus.addFail("SCORE_TRANSACTION_FAIL")
             raise e
+
+    # takes in the stores and request; this modifies the stores directly so no return is needed
+    def calculateDistances(self, stores, request):
+        try:
+            # loading environment data
+            load_dotenv()
+
+            # loops through all the transactions
+            for store in stores:
+                requestLat = radians(request.latitude)
+                storeLat = radians(store.latitude)
+                requestLon = radians(request.longitude)
+                storeLon = radians(store.longitude)
+                
+                dLon = requestLon - storeLon
+                dLat = requestLat - storeLat
+                a = sin(dLat / 2)**2 + cos(requestLat) * cos(storeLat) * sin(dLon / 2)**2
+
+                c = 2 * asin(sqrt(a))
+
+                # miles , use 6371 for kilometers
+                r = 3956
+
+                store.distance = c * r
+
+            # sort the items by score; the recommendation will be items[0] after this
+            stores.sort(key=lambda x: 1*x.distance)
+
+            printFormatting.printSuccess("Calculated distances")
+        except Exception as e:
+            # print issue to terminal and update status
+            printFormatting.printError(str(e))
+            globalStatus.addFail("SCORE_TRANSACTION_FAIL")
+            raise e
+
 
     # this takes in the scored transactions and returns an array of items with their scores aggregated
     # this is just control break logic
