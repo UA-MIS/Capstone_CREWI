@@ -85,7 +85,7 @@ const Widget = (props) => {
             return [result.coords.latitude, result.coords.longitude]
         } catch {
             setStatus("no-location loading");
-            return [0, 0];
+            return ["BLOCKED", "BLOCKED"];
         }
     }
 
