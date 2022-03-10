@@ -9,19 +9,37 @@ from Models import Item
 from Models import Store
 
 class DfaDatabase:
+    # the database object holds the database credentials
+    def __init__(self):
+        try:
+            load_dotenv()
+
+            self.host = os.environ.get('Database_Host')
+            self.username = os.environ.get('Database_Username')
+            self.password = os.environ.get('Databaes_Password')
+            self.database = os.environ.get('Database_Database')
+        except Exception as e:
+            # print issue to terminal and update status
+            printFormatting.printError(str(e))
+            globalStatus.addFail("DATABASE_INIT_FAIL")
+
+    # this will connect to the database, returns a MySQLConnection object
+    def establishConnection(self):
+        return mysql.connector.connect(
+            host = self.host,
+            username = self.username,
+            password = self.password,
+            database = self.database
+        )
+
     # loads stores, returns an array of stores
     def loadStores(self):
         try:
             # loading environment data
             load_dotenv()
 
-            # opening the connection; may want to look into using a connection string dictionary later
-            myConnection = mysql.connector.connect(
-                host = os.environ.get('DFA_Host'),
-                username = os.environ.get('DFA_Username'),
-                password = os.environ.get('DFA_Password'),
-                database = os.environ.get('DFA_Database')
-            )
+            # opening the connection
+            myConnection = DfaDatabase.establishConnection(self)
 
             # executing the select statement
             myCursor = myConnection.cursor()
@@ -57,13 +75,8 @@ class DfaDatabase:
             # loading environment data
             load_dotenv()
 
-            # opening the connection; may want to look into using a connection string dictionary later
-            myConnection = mysql.connector.connect(
-                host = os.environ.get('DFA_Host'),
-                username = os.environ.get('DFA_Username'),
-                password = os.environ.get('DFA_Password'),
-                database = os.environ.get('DFA_Database')
-            )
+            # opening the connection
+            myConnection = DfaDatabase.establishConnection(self)
 
             # executing the select statement
             myCursor = myConnection.cursor()
@@ -102,13 +115,8 @@ class DfaDatabase:
             # loading environment data
             load_dotenv()
 
-            # opening the connection; may want to look into using a connection string dictionary later
-            myConnection = mysql.connector.connect(
-                host = os.environ.get('DFA_Host'),
-                username = os.environ.get('DFA_Username'),
-                password = os.environ.get('DFA_Password'),
-                database = os.environ.get('DFA_Database')
-            )
+            # opening the connection
+            myConnection = DfaDatabase.establishConnection(self)
 
             # executing the select statement
             myCursor = myConnection.cursor()
@@ -165,13 +173,8 @@ class DfaDatabase:
                 endTime = os.environ.get('Morning_Time')
                 timeCondition = "or"
 
-            # opening the connection; may want to look into using a connection string dictionary later
-            myConnection = mysql.connector.connect(
-                host = os.environ.get('DFA_Host'),
-                username = os.environ.get('DFA_Username'),
-                password = os.environ.get('DFA_Password'),
-                database = os.environ.get('DFA_Database')
-            )
+            # opening the connection
+            myConnection = DfaDatabase.establishConnection(self)
 
             # executing the select statement
             myCursor = myConnection.cursor()
@@ -235,13 +238,8 @@ class DfaDatabase:
                 endTime = os.environ.get('Morning_Time')
                 timeCondition = "or"
 
-            # opening the connection; may want to look into using a connection string dictionary later
-            myConnection = mysql.connector.connect(
-                host = os.environ.get('DFA_Host'),
-                username = os.environ.get('DFA_Username'),
-                password = os.environ.get('DFA_Password'),
-                database = os.environ.get('DFA_Database')
-            )
+            # opening the connection
+            myConnection = DfaDatabase.establishConnection(self)
 
             # executing the select statement
             myCursor = myConnection.cursor()
@@ -296,13 +294,8 @@ class DfaDatabase:
             # loading environment data
             load_dotenv()
 
-            # opening the connection; may want to look into using a connection string dictionary later
-            myConnection = mysql.connector.connect(
-                host = os.environ.get('DFA_Host'),
-                username = os.environ.get('DFA_Username'),
-                password = os.environ.get('DFA_Password'),
-                database = os.environ.get('DFA_Database')
-            )
+            # opening the connection
+            myConnection = DfaDatabase.establishConnection(self)
 
             # executing the select statement
             myCursor = myConnection.cursor()

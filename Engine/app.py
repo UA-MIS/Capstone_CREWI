@@ -44,22 +44,28 @@ def recommendItem():
         # making database object
         db = DfaDatabase.DfaDatabase()
 
-        # finding closest store ID
+        # loading all the stores
         stores = db.loadStores()
 
+        # assigning each store its distance from the user; returns the list sorted from nearest to farthest
         engine.calculateDistances(stores, userRequest)        
 
+        # closest store is the first one in the array; making a blank store for recent location
         closestLocation = stores[0]
         recentLocation = Store.Store(0, "", float(0), float(0))
 
+        # finding the most recent store's ID using the user ID from the request
         recentStoreId = db.lookupRecentStore(userRequest)
 
+        # linear search to find which store matches the most recent ID and making that store the recentLocation
         for store in stores:
             if store.id == recentStoreId:
                 recentLocation = store
         
+        # best address should be blank unless the closest and most recent stores match
         bestAddress = ""
 
+        # checking to see if the two locations match; this could be done with any unique field (ID, coordinates, etc.)
         if (closestLocation.address == recentLocation.address):
             bestAddress = closestLocation.address
 
@@ -123,7 +129,7 @@ def recommendItem():
         printFormatting.printFinalStatus(globalStatus.statusArray)
         printFormatting.printError(traceback.format_exc())
         # return the status array and back-up/default recommendation; this uses the same format for easier handling on the front-end
-        # however, recommendations will just be an array with the single default recommendation
+        # however, recommendations will just be an array with the single default recommendation and a default location
         # the values come from the configuration file rather than attempting to access the database since that's a likely cause of failure
         return jsonify({
             "statuses": globalStatus.statusArray,
@@ -133,9 +139,11 @@ def recommendItem():
                 "name": os.environ.get('Default_Recommendation_Name'),
                 "score": int(os.environ.get('Default_Recommendation_Score'))
             }],
-            "bestLocation": "BEST LOC",
-            "closestLocation": "CLOSEST LOC",
-            "recentLocation": "RECENT LOC"
+            "locations": {
+                "bestLocation": os.environ.get('Default_Location_Address'),
+                "closestLocation": "ERROR",
+                "recentLocation": "ERROR"
+            }
         })
 
 #from the article "This line ensures that our Flask app runs only when it is executed in the main file and not when it is imported in some other file"
