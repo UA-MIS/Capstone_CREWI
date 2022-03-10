@@ -20,13 +20,18 @@ class RecommendationRequest:
                 self.time = ""
 
             self.timeSlot = userRequest["timeSlot"]
-            self.location = userRequest["location"]
+            
+            # if coordinates are missing, go on without them but flag it as an issue (recommending closest will fail)
+            try:
+                self.latitude = userRequest["latitude"]
+                self.longitude = userRequest["longitude"]
+            except:
+                printFormatting.printWarning("Proceeding without user coordinates")
+                globalStatus.addIssue("MISSING_COORDINATES_ISSUE")
 
             dfaDatabase = DfaDatabase.DfaDatabase()
 
-            # the request will start without user and store ID; these will be looked up in the engine functions
             self.userId = dfaDatabase.lookupUser(self)
-            self.storeId = dfaDatabase.lookupStore(self)
             printFormatting.printSuccess("Request parsed successfully")
         except Exception as e:
             # printing issue and updating status

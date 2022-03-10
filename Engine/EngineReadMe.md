@@ -11,6 +11,8 @@ go to localhost:8000/hello (subject to change based on paths)
 
 Download/install Python 3.10 or later
 
+To install all the requirements, run ```pip install -r requirements.txt```
+
 pip install flask
 pip install flask-cors
 pip install python-dotenv

@@ -6,21 +6,85 @@ import globalStatus
 import printFormatting
 from Models import Transaction
 from Models import Item
+from Models import Store
 
 class DfaDatabase:
+    # the database object holds the database credentials
+    def __init__(self):
+        try:
+            load_dotenv()
+
+            self.host = os.environ.get('Database_Host')
+            self.username = os.environ.get('Database_Username')
+            self.password = os.environ.get('Database_Password')
+            self.database = os.environ.get('Database_Database')
+        except Exception as e:
+            # print issue to terminal and update status
+            printFormatting.printError(str(e))
+            globalStatus.addFail("DATABASE_INIT_FAIL")
+            raise e
+
+    # this will connect to the database, returns a MySQLConnection object
+    def establishConnection(self):
+        try:
+            return mysql.connector.connect(
+                host = self.host,
+                username = self.username,
+                password = self.password,
+                database = self.database
+            )
+        except Exception as e:
+            # print issue to terminal and update status
+            printFormatting.printError(str(e))
+            globalStatus.addFail("DATABASE_CONNECTION_FAIL")
+            raise e
+
+    # loads stores, returns an array of stores for distance calculations
+    def loadStores(self):
+        try:
+            # loading environment data
+            load_dotenv()
+
+            # opening the connection
+            myConnection = DfaDatabase.establishConnection(self)
+
+            # making a cursor
+            myCursor = myConnection.cursor()
+            # selecting all the relevant data from the store table
+            myCursor.execute("""
+                SELECT Store_ID, Store_Location, Latitude, Longitude
+                FROM DFA_Store
+            """)
+
+            # loading all results into a results object
+            dbResults = myCursor.fetchall()
+
+            # closing connection
+            myConnection.close()
+
+            # initializing empty store array
+            storeArray = []
+
+            # adding stores to the store array
+            for store in dbResults:
+                storeArray.append(Store.Store(store[0], store[1], store[2], store[3]))
+
+            printFormatting.printSuccess("Loaded stores")
+            return storeArray
+        except Exception as e:
+            # print error for debugging, add fail to status array
+            printFormatting.printError(str(e))
+            globalStatus.addFail("STORE_LOADING_FAIL")
+            raise e            
+
     # takes request, returns user id or 0 if user not found
     def lookupUser(self, request):
         try:
             # loading environment data
             load_dotenv()
 
-            # opening the connection; may want to look into using a connection string dictionary later
-            myConnection = mysql.connector.connect(
-                host = os.environ.get('DFA_Host'),
-                username = os.environ.get('DFA_Username'),
-                password = os.environ.get('DFA_Password'),
-                database = os.environ.get('DFA_Database')
-            )
+            # opening the connection
+            myConnection = DfaDatabase.establishConnection(self)
 
             # executing the select statement
             myCursor = myConnection.cursor()
@@ -53,28 +117,25 @@ class DfaDatabase:
             globalStatus.addFail("USER_LOOKUP_FAIL")
             raise e
 
-    # takes request, returns user id or 0 if user not found
-    def lookupStore(self, request):
+    # takes request, returns the user's most recent store ID
+    def lookupRecentStore(self, request):
         try:
             # loading environment data
             load_dotenv()
 
-            # opening the connection; may want to look into using a connection string dictionary later
-            myConnection = mysql.connector.connect(
-                host = os.environ.get('DFA_Host'),
-                username = os.environ.get('DFA_Username'),
-                password = os.environ.get('DFA_Password'),
-                database = os.environ.get('DFA_Database')
-            )
+            # opening the connection
+            myConnection = DfaDatabase.establishConnection(self)
 
-            # executing the select statement
+            # making cursor object
             myCursor = myConnection.cursor()
-            # prepared SQL statement; selecting the store ID that has the given location (not to be confused with store name)
+            # prepared SQL statement; selecting the store ID from the user's most recent transaction
             myCursor.execute("""
                 SELECT Store_ID
-                FROM DFA_Store
-                WHERE Store_Location = %(location)s
-            """, { 'location': request.location })
+                FROM DFA_Transaction
+                WHERE User_ID = %(userId)s
+                ORDER BY Transaction_Time DESC
+                LIMIT 1                
+            """, { 'userId': request.userId })
 
             # fetching scalar from database
             dbResult = myCursor.fetchone()
@@ -84,14 +145,54 @@ class DfaDatabase:
 
             # return query results if it wasn't NULL (None in Python means NULL in SQL)
             if dbResult is not None:
-                printFormatting.printSuccess("Location matched a store in the database")
+                printFormatting.printSuccess("Found user's most recent location")
                 # result is an array for whatever reason, need to pull the single element out
                 return dbResult[0]
 
-            # if result was NULL, return 0 to signal store not found; also add status indicating bad location
-            printFormatting.printWarning("Location does not match any store in the database")
-            globalStatus.addIssue("BAD_LOCATION_ISSUE")
+            # return 0 to indicate store not found, meaning the user doesn't exist or has no transactions
+            printFormatting.printWarning("Could not find user's most recent location")
+            globalStatus.addIssue("RECENT_LOCATION_ISSUE")
             return 0
+        except Exception as e:
+            # print error for debugging, add fail to status array
+            printFormatting.printError(str(e))
+            globalStatus.addFail("LOCATION_LOOKUP_FAIL")
+            raise e
+
+    # takes request, returns the address of the given store ID
+    def lookupStoreId(self, storeId):
+        try:
+            # loading environment data
+            load_dotenv()
+
+            # opening the connection
+            myConnection = DfaDatabase.establishConnection(self)
+
+            # making cursor object
+            myCursor = myConnection.cursor()
+            # prepared SQL statement; selecting the address from the given store ID
+            myCursor.execute("""
+                SELECT Store_Location
+                FROM DFA_Store
+                WHERE Store_ID = %(storeId)s                
+            """, { 'storeId': storeId })
+
+            # fetching scalar from database
+            dbResult = myCursor.fetchone()
+
+            # closing connection
+            myConnection.close()
+
+            # return query results if it wasn't NULL (None in Python means NULL in SQL)
+            if dbResult is not None:
+                printFormatting.printSuccess("Looked up store address")
+                # result is an array for whatever reason, need to pull the single element out
+                return dbResult[0]
+
+            # return blank to indicate store not found, meaning the user doesn't exist or has no transactions
+            printFormatting.printWarning("Could not find user's most recent location")
+            globalStatus.addIssue("RECENT_LOCATION_ISSUE")
+            return ""
         except Exception as e:
             # print error for debugging, add fail to status array
             printFormatting.printError(str(e))
@@ -120,13 +221,8 @@ class DfaDatabase:
                 endTime = os.environ.get('Morning_Time')
                 timeCondition = "or"
 
-            # opening the connection; may want to look into using a connection string dictionary later
-            myConnection = mysql.connector.connect(
-                host = os.environ.get('DFA_Host'),
-                username = os.environ.get('DFA_Username'),
-                password = os.environ.get('DFA_Password'),
-                database = os.environ.get('DFA_Database')
-            )
+            # opening the connection
+            myConnection = DfaDatabase.establishConnection(self)
 
             # executing the select statement
             myCursor = myConnection.cursor()
@@ -190,13 +286,8 @@ class DfaDatabase:
                 endTime = os.environ.get('Morning_Time')
                 timeCondition = "or"
 
-            # opening the connection; may want to look into using a connection string dictionary later
-            myConnection = mysql.connector.connect(
-                host = os.environ.get('DFA_Host'),
-                username = os.environ.get('DFA_Username'),
-                password = os.environ.get('DFA_Password'),
-                database = os.environ.get('DFA_Database')
-            )
+            # opening the connection
+            myConnection = DfaDatabase.establishConnection(self)
 
             # executing the select statement
             myCursor = myConnection.cursor()
@@ -251,13 +342,8 @@ class DfaDatabase:
             # loading environment data
             load_dotenv()
 
-            # opening the connection; may want to look into using a connection string dictionary later
-            myConnection = mysql.connector.connect(
-                host = os.environ.get('DFA_Host'),
-                username = os.environ.get('DFA_Username'),
-                password = os.environ.get('DFA_Password'),
-                database = os.environ.get('DFA_Database')
-            )
+            # opening the connection
+            myConnection = DfaDatabase.establishConnection(self)
 
             # executing the select statement
             myCursor = myConnection.cursor()
