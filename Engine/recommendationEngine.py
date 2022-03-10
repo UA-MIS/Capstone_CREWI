@@ -32,6 +32,12 @@ def recommendRecentLocation(userRequest, db):
         # need to load environment variables for remainder use later
         load_dotenv()
 
+        # if the user ID is 0, that means the user wasn't found, skip the lookups and log the error
+        if userRequest.userId == 0:
+            printFormatting.printWarning("Unable to find the user for most recent location")
+            globalStatus.addFail("RECOMMEND_RECENT_FAIL")
+            return ""
+
         # finding the most recent store's ID using the user ID from the request
         recentStoreId = db.lookupRecentStore(userRequest)
 
