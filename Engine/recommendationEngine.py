@@ -23,7 +23,8 @@ def recommendClosestLocation(userRequest, db):
     except Exception as e:
         # if recommendation fails, use "" as the default value and print the issue; do not raise the exception since the engine should proceed
         printFormatting.printError(str(e))
-        globalStatus.addFail("RECOMMEND_CLOSEST_FAIL")
+        printFormatting.printWarning("Closest location recommendation has failed")
+        globalStatus.addIssue("RECOMMEND_CLOSEST_ISSUE")
         return ""
 
 # this takes a request and database object, returns the address of the user's most recent location
@@ -31,8 +32,8 @@ def recommendRecentLocation(userRequest, db):
     try:
         # if the user ID is 0, that means the user wasn't found, skip the lookups and log the error
         if userRequest.userId == 0:
-            printFormatting.printWarning("Unable to find the user for most recent location")
-            globalStatus.addFail("RECOMMEND_RECENT_FAIL")
+            printFormatting.printWarning("Recent location recommendation has failed")
+            globalStatus.addIssue("RECOMMEND_RECENT_ISSUE")
             return ""
 
         # finding the most recent store's ID using the user ID from the request
@@ -40,8 +41,8 @@ def recommendRecentLocation(userRequest, db):
 
         # if the store ID is 0, that means the user or transactions weren't found; log the error and skip the lookup
         if recentStoreId == 0:
-            printFormatting.printWarning("Unable to find a store for the user's most recent transaction")
-            globalStatus.addFail("RECOMMEND_RECENT_FAIL")
+            printFormatting.printWarning("Recent location recommendation has failed")
+            globalStatus.addIssue("RECOMMEND_RECENT_ISSUE")
             return ""
 
         # this method returns the address of the given store ID, so it can be returned directly
@@ -49,7 +50,8 @@ def recommendRecentLocation(userRequest, db):
     except Exception as e:
         # if recommendation fails, use "" as the default value and print the issue; do not raise the exception since the engine should proceed
         printFormatting.printError(str(e))
-        globalStatus.addFail("RECOMMEND_RECENT_FAIL")        
+        printFormatting.printWarning("Recent location recommendation has failed")
+        globalStatus.addIssue("RECOMMEND_RECENT_ISSUE")        
         return ""
 
 # takes in the address of closest and most recent locations; this will return the "best" location, which is basically closest if they match
@@ -61,7 +63,8 @@ def determineBestLocation(closestLocation, recentLocation):
     except Exception as e:
         # there's no way this ever throws an exception, but just to be safe it would return a blank
         printFormatting.printError(str(e))
-        globalStatus.addFail("RECOMMEND_BEST_FAIL")        
+        printFormatting.printWarning("Determination of best location has failed")        
+        globalStatus.addIssue("RECOMMEND_BEST_ISSUE")        
         return ""
 
 # this takes a request and database object and returns an array of item objects (sorted from best to worst recommendations)
@@ -113,7 +116,8 @@ def recommendItems(userRequest, db):
     except Exception as e:
         # if recommending items fails, use the default recommendation
         printFormatting.printError(str(e))
-        globalStatus.addFail("RECOMMEND_ITEMS_FAIL")
+        printFormatting.printWarning("Item recommendation has failed, proceeding with default item")
+        globalStatus.addIssue("RECOMMEND_ITEMS_ISSUE")
         # making a one item array with the default item
         return [Item.Item(
             int(os.environ.get('Default_Recommendation_ID')),
