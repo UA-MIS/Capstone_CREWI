@@ -192,6 +192,54 @@ const Widget = (props) => {
         console.log('test')
     }
 
+    const showBest = () => {
+        // Get the snackbar DIV
+        var x = document.getElementById("bestSnackbar");
+
+        document.getElementById("bestButton").disabled = true;
+
+        // Add the "show" class to DIV
+        x.className += "show";
+
+        // After 3 seconds, remove the show class from DIV
+        setTimeout(function(){
+            x.className = x.className.replace("show", ""); 
+            document.getElementById("bestButton").disabled = false;
+        }, 3000);
+    }
+
+    const showClosest = () => {
+        // Get the snackbar DIV
+        var x = document.getElementById("closestSnackbar");
+
+        document.getElementById("closestButton").disabled = true;
+
+        // Add the "show" class to DIV
+        x.className += "show";
+
+        // After 3 seconds, remove the show class from DIV
+        setTimeout(function(){
+            x.className = x.className.replace("show", ""); 
+            document.getElementById("closestButton").disabled = false;
+        }, 3000);
+    }
+
+    const showRecent = () => {
+        // Get the snackbar DIV
+        var x = document.getElementById("recentSnackbar");
+
+        document.getElementById("recentButton").disabled = true;
+
+        // Add the "show" class to DIV
+        x.className += "show";
+
+        // After 3 seconds, remove the show class from DIV
+        setTimeout(function(){
+            x.className = x.className.replace("show", ""); 
+            document.getElementById("recentButton").disabled = false;
+        }, 3000);
+    }
+
     // DISPLAY SECTION
 
     // loading display
@@ -287,33 +335,29 @@ const Widget = (props) => {
         if (bestLocation) {
             // if there's a best location, show it (means closest and most recent were the same and not blank)
             locationHtml = (<div>
-                <span className='widgetText'>
-                    {bestLocation}
-                </span>
+                <button className='widgetButton' id="bestButton" onClick={showBest}>Best Location</button>
+                <div className="snackbar " id="bestSnackbar">{bestLocation}</div>
             </div>)
         } else if (closestLocation && recentLocation) {
             // if there isn't a best location (b/c of the 'else') but closest and recent are truthy, they must be different (show both)
             locationHtml = (<div>
-                <span className='widgetText'>
-                    {closestLocation}
-                </span>
-                <span className='widgetText'>
-                    {recentLocation}
-                </span>
+                <button className='widgetButton' id="closestButton" onClick={showClosest}>Closest Location</button>
+                <div className="snackbar " id="closestSnackbar">{closestLocation}</div>
+                &nbsp;
+                <button className='widgetButton' id="recentButton" onClick={showRecent}>Previous Location</button>
+                <div className="snackbar " id="recentSnackbar">{recentLocation}</div>
             </div>)
         } else if (closestLocation) {
             // this happens if closest and recent were different, but recent was falsy, meaning it was blank (show closest only)
             locationHtml = (<div>
-                <span className='widgetText'>
-                    {closestLocation}
-                </span>
+                <button className='widgetButton' id="closestButton" onClick={showClosest}>Closest Location</button>
+                <div className="snackbar " id="closestSnackbar">{closestLocation}</div>
             </div>)
         } else if (recentLocation) {
             // this happens if closest and recent were different, but closest was falsy, meaning it was blank (show recent only)
             locationHtml = (<div>
-                <span className='widgetText'>
-                    {recentLocation}
-                </span>
+                <button className='widgetButton' id="recentButton" onClick={showRecent}>Previous Location</button>
+                <div className="snackbar " id="recentSnackbar">{recentLocation}</div>
             </div>)
         } else {
             // this means best, recent, and closest locations were all falsy (very likely blank); show an error or something, probably a reset button too
@@ -325,7 +369,7 @@ const Widget = (props) => {
         }
 
         return(
-            <div onClick={clickWidget} className='widgetBox boxShadowImitation' style={{
+            <div id="widget" onClick={clickWidget} className='widgetBox boxShadowImitation' style={{
                 backgroundImage: `url(${imgUrl})`
             }}>
                 <span className='widgetText'>
