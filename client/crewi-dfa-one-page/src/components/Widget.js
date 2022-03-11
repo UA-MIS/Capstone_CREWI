@@ -85,9 +85,6 @@ const Widget = (props) => {
             // result will be a Geolocation object; await means execution will pause here until finished
             let result = await getCoordinates();   
 
-            console.log("LOAD CURRENT LOCATION:");
-            console.log(result);
-
             // returns the coordinates to requestRecommendation, takes in coordinates and options
             return [result.coords.latitude, result.coords.longitude]
         } catch {
@@ -125,7 +122,6 @@ const Widget = (props) => {
         event.preventDefault();
         // only proceed if the user actually picks a time slot; otherwise, just ignore the submit until they do
         if (timeSlot != "") {
-            console.log('form submitted');
             timeStatus = "time slot selected";
             // because the requesting useEffect only runs on username change, request has to be called again
             requestRecommendation();
@@ -149,9 +145,6 @@ const Widget = (props) => {
                     let coordinates = await loadCurrentLocation();
                     const latitude = coordinates[0];
                     const longitude = coordinates[1];
-    
-                    console.log("IN FETCH:");
-                    console.log(`${latitude} ${longitude}`)
 
                     // this will actually grab the rec and update the status for the DOM
                     fetchRecommendation(username, time, timeSlot, latitude, longitude);
@@ -168,15 +161,16 @@ const Widget = (props) => {
                 setStatus("no-time");
             }
         } else {
-            console.log("TIMESLOT: " +timeSlot);
             // this will run if time failed and the user picked a time slot
             try {
                 // grabs location (meaning street address) and waits here so that fetchRec won't get called until this done
                 // loadCurrentLocation needs to return a blank or sentinel value into location if something fails
-                let location = await loadCurrentLocation();
+                let coordinates = await loadCurrentLocation();
+                const latitude = coordinates[0];
+                const longitude = coordinates[1];
 
                 // this will actually grab the rec and update the status for the DOM
-                fetchRecommendation(username, time, timeSlot, location);
+                fetchRecommendation(username, time, timeSlot, latitude, longitude);
             } catch (error) {
                 console.log(error);
                 // if something goes wrong, display fail
@@ -189,7 +183,6 @@ const Widget = (props) => {
     }
 
     const clickWidget = () =>{
-        console.log('test')
     }
 
     const showBest = () => {
@@ -378,7 +371,6 @@ const Widget = (props) => {
                 <br/>
                 <br/>
                 {locationHtml}
-                <br/>
                 <br/>
                 <br/>
             <button className='widgetButton' id="orderSpan">Add to Cart</button>
