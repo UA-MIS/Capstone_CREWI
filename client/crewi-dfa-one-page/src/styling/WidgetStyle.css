@@ -229,3 +229,48 @@
   transform: translateY(15px);
   transition: transform 0.3s ease-out 0s;
 }
+
+.resetButton {
+  padding-top: 0% !important;
+  font-size: 1.5em; /* 40px/16=2.5em */
+  position:absolute;
+  top: 0%;
+  right: 0%;
+  border-radius: 10rem !important;
+  background-color: #06375f; /* Black background color */
+}
+
+#statusSnackbar {
+  display: none;
+  min-width: 50%; /* Set a default minimum width */
+  max-width: 70%;
+  border-radius: 0.5rem !important;
+  background-color: #681010; /* Black background color */
+  color: #fff; /* White text color */
+  text-align: center; /* Centered text */
+  border-radius: 2px; /* Rounded borders */
+  padding: 16px; /* Padding */
+  position: top; /* Sit on top of the screen */
+  z-index: 1; /* Add a z-index if needed */
+  left: 50%; /* Center the snackbar */
+  bottom: 40% !important; /* 30px from the bottom */
+}
+
+#statusSnackbar.show {
+  display: block;
+
+  /* Add animation: Take 0.5 seconds to fade in and out the snackbar.
+  However, delay the fade out process for 2.5 seconds */
+  -webkit-animation: fadein 0.5s, fadeout 0.5s 2.5s;
+  animation: fadein 0.5s, fadeout 0.5s 2.5s;
+}
+
+.statusButton {
+  padding-top: 0% !important;
+  font-size: 1.5em; /* 40px/16=2.5em */
+  position:absolute;
+  top: 18%;
+  right: 0%;
+  border-radius: 10rem !important;
+  background-color: #681010; /* Black background color */
+}

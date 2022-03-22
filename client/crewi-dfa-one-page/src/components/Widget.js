@@ -10,11 +10,11 @@ const Widget = (props) => {
     const [closestLocation, setClosestLocation] = useState("");
     const [recentLocation, setRecentLocation] = useState("");
     const [bestLocation, setBestLocation] = useState("");
-
+    const [statusMessage, setStatusMessage] = useState("");
 
     let time = "";
     let timeStatus = "";
-    
+
     //this runs the first time, and then again whenever username is changed 
     useEffect(() => {
         timeStatus = "";
@@ -44,15 +44,22 @@ const Widget = (props) => {
                 // logs the result, updates the state (which will update the DOM)
                 console.log(result);
 
+                // updating item info
                 setImgUrl(result.items[0].imgUrl);
                 setItemName(result.items[0].name);
+
+                // updating location info
                 setClosestLocation(result.locations.closestLocation);
                 setRecentLocation(result.locations.recentLocation);
                 setBestLocation(result.locations.bestLocation);
 
+                // determining the status message
+                determineStatus(result.statuses);
+
+                // going to the success screen
                 setStatus("success");
             }).catch(error => {
-                // logs the error, updates state to fail
+                // logs the error, updates state to fail; this is the full engine failure, so there won't be a status array
                 console.log(error);
                 setStatus("fail");
             })
@@ -132,6 +139,9 @@ const Widget = (props) => {
     const requestRecommendation = async function() {
         // requesting is when the widget is "loading"
         setStatus("loading");
+
+        // reset statuses whenever reloading widget; these should be overwritten anyway
+        setStatusMessage("");
 
         // if time slot is blank, try to request with time loading
         if (timeStatus == "") {
@@ -233,6 +243,46 @@ const Widget = (props) => {
         }, 3000);
     }
 
+    const showStatus = () => {
+        // Get the snackbar DIV
+        var x = document.getElementById("statusSnackbar");
+
+        document.getElementById("statusBtn").disabled = true;
+
+        // Add the "show" class to DIV
+        x.className += "show";
+
+        // After 3 seconds, remove the show class from DIV
+        setTimeout(function(){
+            x.className = x.className.replace("show", ""); 
+            document.getElementById("statusBtn").disabled = false;
+        }, 3000);        
+    }
+
+    // this method determines what message to display to the end user based on the engine's issues and fails
+    // lots of room for adjustment here, refer to documentation
+    const determineStatus = (statusArray) => {
+        // msg is defaulted to blank, if there isn't a global fail, bad username, or location fail, it'll stay blank
+        // the other fails/issues aren't of top priority, so this keeps the user messages limited
+        // the response can still be logged to see all statuses if needed for debugging
+        let msg = "";
+        
+        // global fail takes priority, it means everything failed and the default is being used
+        // then bad username (if one was given), then location services being blocked
+        // could easily add a scenario for bad username and bad location, but that's probably less useful
+        // in theory if both are broken the user will just fix them one at a time
+        // plenty of adjustments could be made, can document and revise as needed
+        if (statusArray.includes("GLOBAL_FAIL")) {
+            msg = "Unable to make a customized recommendation at this time...";
+        } else if (statusArray.includes("BAD_USERNAME_ISSUE") && username) {
+            msg = "No user found with that username, try signing in again";
+        } else if (statusArray.includes("RECOMMEND_CLOSEST_ISSUE")) {
+            msg = "We couldn't find you, double check location permissions";
+        }
+
+        setStatusMessage(msg);
+    }
+
     // DISPLAY SECTION
 
     // loading display
@@ -321,6 +371,17 @@ const Widget = (props) => {
 
     else if (status == "success")
     {
+        // location for showing status
+        let statusHtml;
+        if (statusMessage) {
+            statusHtml = (<div>
+                <button className='widgetButton statusButton' id="statusBtn" onClick={showStatus}>&nbsp;!&nbsp;</button>
+                <div className="snackbar " id="statusSnackbar">{statusMessage}</div>
+            </div>
+            )
+        }
+
+
         // logic for handling the location display; swap out the specific HTML as needed
         // also there's gotta be a better way to do this logic
         let locationHtml;
@@ -354,26 +415,29 @@ const Widget = (props) => {
             </div>)
         } else {
             // this means best, recent, and closest locations were all falsy (very likely blank); show an error or something, probably a reset button too
-            locationHtml = (<div>
-                <span className='widgetText'>
-                    LOCATION SERVICES FAILED
-                </span>
-            </div>)
+            // may want to change this later, but the most elegant solution might just be to show nothing
+            // locationHtml = (<div>
+            //     {/* <span className='widgetText'>
+            //         LOCATION SERVICES FAILED
+            //     </span> */}
+            // </div>)
         }
 
         return(
             <div id="widget" onClick={clickWidget} className='widgetBox boxShadowImitation' style={{
                 backgroundImage: `url(${imgUrl})`
             }}>
+                <button className='widgetButton resetButton' onClick={requestRecommendation}>&#8635;</button>
                 <span className='widgetText'>
                     {itemName}
                 </span>
                 <br/>
                 <br/>
+                {statusHtml}
                 {locationHtml}
                 <br/>
                 <br/>
-            <button className='widgetButton' id="orderSpan">Add to Cart</button>
+            <button className='widgetButton' id="orderSpan">Order Now</button>
             </div>
         )
     }
