@@ -1,4 +1,15 @@
-from flask import Flask
+from flask import Flask, request, jsonify
+from dotenv import load_dotenv
+from flask_cors import CORS
+
+from Models import RecommendationRequest
+from Models import Database
+
+import os
+import globalStatus
+import printFormatting
+import traceback
+import recommendationEngine
  
 app = Flask(__name__)
  
