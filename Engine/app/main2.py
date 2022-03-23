@@ -2,8 +2,8 @@ from flask import Flask, request, jsonify
 from dotenv import load_dotenv
 from flask_cors import CORS
 
-from app.Models import RecommendationRequest
-from app.Models import Database
+import Models.RecommendationRequest as RecommendationRequest
+import Models.Database as Database
 
 import os
 import globalStatus
