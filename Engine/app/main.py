@@ -5,7 +5,7 @@ from flask_cors import CORS
 from .Models import RecommendationRequest
 from .Models import Database
 from .Functions import globalStatus
-from .Functions import printFormatting
+# from .Functions import printFormatting
 from .Functions import recommendationEngine
 
 import os
