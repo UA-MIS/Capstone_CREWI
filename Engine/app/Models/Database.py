@@ -1,6 +1,6 @@
 import Transaction
-import Item
-import Store
+from . import Item
+from . import Store
 
 import os
 import mysql.connector
