@@ -114,8 +114,8 @@ def recommendItemsAndLocations():
             }
         })
 
-# from the article "This line ensures that our Flask app runs only when it is executed in the main file and not when it is imported in some other file"
-# gonna be honest idk what that means in a practical sense, but we can look into it more if we can get issues when hosting, might come up for file structure too
-if __name__ == '__main__':
-    # eventually host will be updated to our hosting service URL, can change port as needed
-    app.run(host='0.0.0.0', port=8000)
+# # from the article "This line ensures that our Flask app runs only when it is executed in the main file and not when it is imported in some other file"
+# # gonna be honest idk what that means in a practical sense, but we can look into it more if we can get issues when hosting, might come up for file structure too
+# if __name__ == '__main__':
+#     # eventually host will be updated to our hosting service URL, can change port as needed
+#     app.run(host='0.0.0.0', port=8000)
