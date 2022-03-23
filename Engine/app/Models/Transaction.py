@@ -1,5 +1,5 @@
-import printFormatting
-import globalStatus
+from ..Functions import printFormatting
+from ..Functions import globalStatus
 
 # TRANSACTION.PY: Class for holding a transaction from the database
 

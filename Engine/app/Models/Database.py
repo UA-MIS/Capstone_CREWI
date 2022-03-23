@@ -1,11 +1,11 @@
-from Models import Transaction
-from Models import Item
-from Models import Store
+import Transaction
+import Item
+import Store
 
 import os
 import mysql.connector
-import globalStatus
-import printFormatting
+from ..Functions import globalStatus
+from ..Functions import printFormatting
 
 # DATABASE.PY: Class that handles accessing the database; alter the environment variables to target another MySQL DB
 

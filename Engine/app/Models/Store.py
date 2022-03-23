@@ -1,5 +1,5 @@
-import printFormatting
-import globalStatus
+from ..Functions import printFormatting
+from ..Functions import globalStatus
 
 # STORE.PY: Class for Store Locations in the database
 
