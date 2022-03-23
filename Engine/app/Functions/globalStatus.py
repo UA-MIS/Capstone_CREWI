@@ -1,4 +1,4 @@
-import printFormatting
+from . import printFormatting
 
 # GLOBALSTATUS.PY: Module to handle global status; never add fails or issues directly, always use these methods to do it
 
