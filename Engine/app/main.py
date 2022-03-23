@@ -2,15 +2,15 @@ from flask import Flask, request, jsonify
 from dotenv import load_dotenv
 from flask_cors import CORS
 
-from Models import RecommendationRequest
-from Models import Database
+import Models.RecommendationRequest as RecommendationRequest
+import Models.Database as Database
 
 import os
 import globalStatus
 import printFormatting
 import traceback
 import recommendationEngine
- 
+
 app = Flask(__name__)
  
 @app.route("/")
