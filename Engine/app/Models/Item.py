@@ -1,5 +1,5 @@
-import globalStatus
-import printFormatting
+from ..Functions import globalStatus
+from ..Functions import printFormatting
 
 # ITEM.PY: Class for menu items; this is used in the item recommendation process
 

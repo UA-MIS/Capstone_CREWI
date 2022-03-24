@@ -1,5 +1,5 @@
-import globalStatus
-import printFormatting
+from ..Functions import globalStatus
+from ..Functions import printFormatting
 
 # USER.PY: Class for users from the database
 

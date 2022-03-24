@@ -1,6 +1,6 @@
 import datetime
-import printFormatting
-import globalStatus
+from ..Functions import printFormatting
+from ..Functions import globalStatus
 
 # RECOMMENDATIONREQUEST.PY: Class for holding request data, this is just a constructor
 

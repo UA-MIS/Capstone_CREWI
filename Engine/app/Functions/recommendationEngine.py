@@ -1,11 +1,11 @@
 from datetime import datetime
 from math import radians, cos, sin, asin, sqrt
 
-from Models import Item
+from ..Models import Item
 
 import os
-import printFormatting
-import globalStatus
+from . import printFormatting
+from . import globalStatus
 
 # RECOMMENDATIONENGINE.PY: Contains functions for engine logic
 

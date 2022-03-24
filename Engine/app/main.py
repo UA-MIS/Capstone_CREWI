@@ -2,27 +2,19 @@ from flask import Flask, request, jsonify
 from dotenv import load_dotenv
 from flask_cors import CORS
 
-from Models import RecommendationRequest
-from Models import Database
+from .Models import RecommendationRequest
+from .Models import Database
+from .Functions import globalStatus
+from .Functions import printFormatting
+from .Functions import recommendationEngine
 
 import os
-import globalStatus
-import printFormatting
 import traceback
-import recommendationEngine
 
-# APP.PY: Handles the routing of the API (this is basically the controller)
-
-# initializes the Flask app
 app = Flask(__name__)
-
-# handles CORS policy
-CORS(app)
-
-#specifying the route and methods allowed; this is the default/blank route, it accepts GET or POST
-@app.route('/', methods=['GET', 'POST'])
-#the function that runs when this route is used; this just returns documentation for the API routes
-def welcome():
+ 
+@app.route("/")
+def home_view():
     return """
     <h1>Routes:</h1>
     <hr>
@@ -114,8 +106,8 @@ def recommendItemsAndLocations():
             }
         })
 
-# from the article "This line ensures that our Flask app runs only when it is executed in the main file and not when it is imported in some other file"
-# gonna be honest idk what that means in a practical sense, but we can look into it more if we can get issues when hosting, might come up for file structure too
-if __name__ == '__main__':
-    # eventually host will be updated to our hosting service URL, can change port as needed
-    app.run(host='0.0.0.0', port=8000)
+# # from the article "This line ensures that our Flask app runs only when it is executed in the main file and not when it is imported in some other file"
+# # gonna be honest idk what that means in a practical sense, but we can look into it more if we can get issues when hosting, might come up for file structure too
+# if __name__ == '__main__':
+#     # eventually host will be updated to our hosting service URL, can change port as needed
+#     app.run(host='0.0.0.0', port=8000)
