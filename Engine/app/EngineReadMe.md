@@ -1,5 +1,10 @@
 ## Update: run python wsgi.py (in Engine folder); everything else should be fine
 
+# To update requirements file: run pipreqs (in Engine folder); if pipreqs isn't installed run pip install pipreqs (in Engine folder)
+# If you update the requirements file, you must update the Pipfile: run pipenv install -r requirements.txt (in Engine folder), then pipenv shell (also in Engine folder) to update the virtual environment
+
+# To install requirements: run pip install -r requirements.txt (in Engine folder)
+
 Going to put the Flask API and actual engine logic in here.
 
 SETUP:
