@@ -2,7 +2,7 @@ from flask import Flask, request, jsonify
 from dotenv import load_dotenv
 from flask_cors import CORS
 
-from .Models import RecommendationRequest
+from Models.RecommendationRequest import RecommendationRequest
 from .Models import Database
 from .Functions import globalStatus
 from .Functions import printFormatting
