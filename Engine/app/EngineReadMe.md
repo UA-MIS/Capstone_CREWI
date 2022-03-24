@@ -1,3 +1,5 @@
+## Update: run python wsgi.py (in Engine folder); everything else should be fine
+
 Going to put the Flask API and actual engine logic in here.
 
 SETUP:
