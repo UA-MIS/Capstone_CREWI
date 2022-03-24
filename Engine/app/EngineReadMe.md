@@ -43,3 +43,26 @@ https://alabama.box.com/s/ppldcpifoo139sje8l4y91qwch3afdv6
 
 
 Also, you're going to need the .env file, but we obviously can't put the database credentials in the code. Message me and I'll send you the variables; make sure you name the file ".env" in the engine folder so that the .gitignore won't commit it.
+
+# Definitive Setup Guide (3/24/22):
+
+Step 1: Go to https://www.python.org/downloads/ and download/install the latest version
+
+Step 2: Clone the code from https://github.com/UA-MIS/Capstone_CREWI onto your machine
+
+Step 3: Open a terminal and navigate to the Capstone_CREWI directory
+
+Step 4: Navigate to /Capstone_CREWI/Engine
+
+Step 5: Run ```pip install -r requirements.txt``` (this installs all the requirements in the requirements.txt file)
+
+Step 6: Go to https://alabama.box.com/s/ppldcpifoo139sje8l4y91qwch3afdv6 and download the .env file
+
+Step 7: Copy the .env file into the /Capstone_CREWI/Engine/app folder (this is just a text file, so you can just make a file called .env and paste in the text if needed)
+
+Step 6: Run ```python wsgi.py``` to run the engine locally (it runs on port 8000; this can be changed in the file, but the default port is busy on the AIME computers)
+
+Step 7: Open http://localhost:8000/ (swap port number if needed) to view the home page of the engine, which has documentation on formatting a request
+
+Notes:
+    > We recommend using Postman for 
