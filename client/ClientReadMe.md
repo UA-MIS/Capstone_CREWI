@@ -22,3 +22,11 @@ public/index.html is where the page will actually load; for the most part you sh
 Packages
 
 Chakra-UI: npm i @chakra-ui/react @emotion/react@^11 @emotion/styled@^11 framer-motion@^6 (https://chakra-ui.com/docs/getting-started)
+
+# SETUP
+1. Go to client/crewi-dfa-one-page (case sensitive)
+2. Download node.js at https://nodejs.org/en/download/
+3. Restart your computer
+4. Run ```npm install```
+5. Run ```npm start```
+6. Allow access if prompted

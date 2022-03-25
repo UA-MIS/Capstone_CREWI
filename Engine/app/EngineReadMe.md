@@ -1,7 +1,17 @@
 ## Update: run python wsgi.py (in Engine folder); everything else should be fine
 
+pip install pipenv
+restart computer
+
+pipenv install -r requirements.txt
+
+pip install -r requirements.txt
+
 # To update requirements file: run pipreqs (in Engine folder); if pipreqs isn't installed run pip install pipreqs (in Engine folder)
 # If you update the requirements file, you must update the Pipfile: run pipenv install -r requirements.txt (in Engine folder), then pipenv shell (also in Engine folder) to update the virtual environment
+
+add mysql_connector==2.2.9 to reqs file
+
 
 # To install requirements: run pip install -r requirements.txt (in Engine folder)
 
@@ -46,9 +56,17 @@ Also, you're going to need the .env file, but we obviously can't put the databas
 
 # Definitive Setup Guide (3/24/22):
 
-Step 1: Go to https://www.python.org/downloads/ and download/install the latest version
+Step 1: Go to https://www.python.org/downloads/ and download/install the latest version; restart when finished
+    When installing, make sure "Add Python 3.6 to PATH"
+
 
 Step 2: Clone the code from https://github.com/UA-MIS/Capstone_CREWI onto your machine
+
+Check that you trust authors and confirm
+
+Install extensions:
+    Python
+
 
 Step 3: Open a terminal and navigate to the Capstone_CREWI directory
 
@@ -62,7 +80,19 @@ Step 7: Copy the .env file into the /Capstone_CREWI/Engine/app folder (this is j
 
 Step 6: Run ```python wsgi.py``` to run the engine locally (it runs on port 8000; this can be changed in the file, but the default port is busy on the AIME computers)
 
+pip install mysql_connector
+
 Step 7: Open http://localhost:8000/ (swap port number if needed) to view the home page of the engine, which has documentation on formatting a request
+
+pip install pipenv
+
+run pipenv shell
+
+pipenv install -r requirements.txt
+
+pipenv install mysql_connector
+pip install mysql-connector-python
+
 
 Notes:
     > We recommend using Postman for 
