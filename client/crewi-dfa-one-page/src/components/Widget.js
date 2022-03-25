@@ -23,8 +23,10 @@ const Widget = (props) => {
 
     // fetches the recommendation, might need to be async? doesn't look like it does at the moment
     const fetchRecommendation = function(username, time, timeSlot, latitude, longitude) {
-        // fix this hard-coded URL later
-        fetch(`http://localhost:8000/recommendation/`, {
+        // for local testing use this:
+        // fetch(`http://localhost:8000/recommendation/`, {
+        // for testing the deployed hosting
+        fetch(`https://crewi-engine.herokuapp.com/recommendation/`, {
             // GET can't take a request body, apparently
             method: "POST",
             headers: {
