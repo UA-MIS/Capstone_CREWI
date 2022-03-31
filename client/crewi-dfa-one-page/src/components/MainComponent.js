@@ -46,7 +46,7 @@ export default class MainComponent extends Component {
                     <Box paddingTop='30'> */}
                         {/* the widget just needs a username input, which is taken straight from this state */}
                         <Box>
-                            <Widget username={this.state.username}/>
+                            <Widget username={this.state.username} orderLink="https://www.chipotle.com/"/>
                         </Box>
                     {/* </Box>
                 </Container> */}

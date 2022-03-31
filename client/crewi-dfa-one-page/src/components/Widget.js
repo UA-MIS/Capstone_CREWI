@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react'
 const Widget = (props) => {
     //these happen once no matter what; they will not run again
     const [username, setUsername] = useState("");
+    const [orderLink, setOrderLink] = useState("");
     const [status, setStatus] = useState("loading");
     const [timeSlot, setTimeSlot] = useState("");
     const [imgUrl, setImgUrl] = useState("");
@@ -117,6 +118,7 @@ const Widget = (props) => {
     //props are updated when the button is clicked bc it will update the main state, etc.
     useEffect(() => {
         setUsername(props.username);
+        setOrderLink(props.orderLink);
     })
 
     // runs whenever radio buttons are clicked
@@ -194,7 +196,12 @@ const Widget = (props) => {
         
     }
 
-    const clickWidget = () =>{
+    const clickOrder = () =>{
+        window.location.href = orderLink;
+    }
+
+    const copyLocation = location => {
+        navigator.clipboard.writeText(location);
     }
 
     const showBest = () => {
@@ -291,7 +298,7 @@ const Widget = (props) => {
     if (status == "loading")
     {
         return(
-            <div onClick={clickWidget} className='widgetLoading widgetBox boxShadowImitation' style={{
+            <div className='widgetLoading widgetBox boxShadowImitation' style={{
                 backgroundImage: `url(https://drive.google.com/uc?export=view&id=1jOKIa9urkCFsa6OGGf8Hrd8DROPzkmfa)`
             }}>
             </div>        
@@ -301,7 +308,7 @@ const Widget = (props) => {
     else if (status == "no-location loading")
     {
         return(
-            <div onClick={clickWidget} className='widgetLoading widgetBox boxShadowImitation' style={{
+            <div className='widgetLoading widgetBox boxShadowImitation' style={{
                 backgroundImage: `url(https://drive.google.com/uc?export=view&id=1jOKIa9urkCFsa6OGGf8Hrd8DROPzkmfa)`
             }}>
                 <span className='widgetText'>
@@ -392,28 +399,28 @@ const Widget = (props) => {
             // if there's a best location, show it (means closest and most recent were the same and not blank)
             locationHtml = (<div>
                 <button className='widgetButton' id="bestButton" onClick={showBest}>Best Location</button>
-                <div className="snackbar " id="bestSnackbar">{bestLocation}</div>
+                <div onClick={() => copyLocation(bestLocation)} className="snackbar " id="bestSnackbar">{bestLocation}</div>
             </div>)
         } else if (closestLocation && recentLocation) {
             // if there isn't a best location (b/c of the 'else') but closest and recent are truthy, they must be different (show both)
             locationHtml = (<div>
                 <button className='widgetButton' id="closestButton" onClick={showClosest}>Closest Location</button>
-                <div className="snackbar " id="closestSnackbar">{closestLocation}</div>
+                <div onClick={() => copyLocation(closestLocation)} className="snackbar " id="closestSnackbar">{closestLocation}</div>
                 &nbsp;
                 <button className='widgetButton' id="recentButton" onClick={showRecent}>Previous Location</button>
-                <div className="snackbar " id="recentSnackbar">{recentLocation}</div>
+                <div onClick={() => copyLocation(recentLocation)} className="snackbar " id="recentSnackbar">{recentLocation}</div>
             </div>)
         } else if (closestLocation) {
             // this happens if closest and recent were different, but recent was falsy, meaning it was blank (show closest only)
             locationHtml = (<div>
                 <button className='widgetButton' id="closestButton" onClick={showClosest}>Closest Location</button>
-                <div className="snackbar " id="closestSnackbar">{closestLocation}</div>
+                <div onClick={() => copyLocation(closestLocation)} className="snackbar " id="closestSnackbar">{closestLocation}</div>
             </div>)
         } else if (recentLocation) {
             // this happens if closest and recent were different, but closest was falsy, meaning it was blank (show recent only)
             locationHtml = (<div>
                 <button className='widgetButton' id="recentButton" onClick={showRecent}>Previous Location</button>
-                <div className="snackbar " id="recentSnackbar">{recentLocation}</div>
+                <div onClick={() => copyLocation(recentLocation)} className="snackbar " id="recentSnackbar">{recentLocation}</div>
             </div>)
         } else {
             // this means best, recent, and closest locations were all falsy (very likely blank); show an error or something, probably a reset button too
@@ -426,7 +433,7 @@ const Widget = (props) => {
         }
 
         return(
-            <div id="widget" onClick={clickWidget} className='widgetBox boxShadowImitation' style={{
+            <div id="widget" className='widgetBox boxShadowImitation' style={{
                 backgroundImage: `url(${imgUrl})`
             }}>
                 <button className='widgetButton resetButton' onClick={requestRecommendation}>&#8635;</button>
@@ -439,7 +446,7 @@ const Widget = (props) => {
                 {locationHtml}
                 <br/>
                 <br/>
-            <button className='widgetButton' id="orderSpan">Order Now</button>
+            <button onClick={clickOrder} className='widgetButton' id="orderSpan">Order Now</button>
             </div>
         )
     }
