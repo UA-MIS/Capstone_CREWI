@@ -10,6 +10,7 @@ from .Functions import recommendationEngine
 
 import os
 import traceback
+import datetime
 
 app = Flask(__name__)
 
@@ -42,8 +43,15 @@ def home_view():
 @app.route('/recommendation/', methods=['POST'])
 # this function returns the recommended items and locations; refer to documentation or log the JSON return to see the structure
 def recommendItemsAndLocations():
+    # TEST: printing out new request message with line breaks for clarity
+    print("\n\n\nSTARTING NEW REQUEST AT " + str(datetime.datetime.now()))
+
     printFormatting.printSuccess("Recommendation request received")
     
+    # TEST: printing request body
+    print("REQUEST BODY:")
+    print(request.json)
+
     # this is the global status array; it needs to be in this scope in case making the request fails
     # do not initialize it again, the Status object is basically a singleton
     globalStatus.init()
@@ -71,6 +79,10 @@ def recommendItemsAndLocations():
 
         # recommending items; if something goes wrong, it'll be just the default item
         items = recommendationEngine.recommendItems(userRequest, db)
+
+        # TEST: printing the request information
+        print("REQUEST INFORMATION:")
+        print(userRequest)
 
         # returns the statuses and recommendations; recommendations[0] will be the top recommendation
         return jsonify({
