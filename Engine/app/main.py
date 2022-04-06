@@ -47,10 +47,6 @@ def recommendItemsAndLocations():
     print("\n\n\nSTARTING NEW REQUEST AT " + str(datetime.datetime.now()))
 
     printFormatting.printSuccess("Recommendation request received")
-    
-    # TEST: printing request body
-    print("REQUEST BODY:")
-    print(request.json)
 
     # this is the global status array; it needs to be in this scope in case making the request fails
     # do not initialize it again, the Status object is basically a singleton
@@ -62,6 +58,10 @@ def recommendItemsAndLocations():
         # loading environment variables; this should only have to happen once but try doing this before using them again if it causes issues
         load_dotenv()
         
+        # TEST: printing request body
+        print("REQUEST BODY:")
+        print(request.json)
+
         # making database object so that db credentials only have to be loaded once
         db = Database.Database()
 
