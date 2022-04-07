@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import './App.css';
 
+// this is the actual widget functionality that is loaded in with the static files
 function App({ domElement }) {
     //these happen once no matter what; they will not run again
     const [username, setUsername] = useState("");

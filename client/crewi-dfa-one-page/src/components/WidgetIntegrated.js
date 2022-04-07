@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react'
 
+// this is the functional code of the widget; this will load the widget as a component rather than grabbing the actual widget from the static files
+// this can be useful for quickly testing stuff, but make sure to update the actual widget in crewi-widget
 const WidgetIntegrated = (props) => {
     //these happen once no matter what; they will not run again
     const [username, setUsername] = useState("");
