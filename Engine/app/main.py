@@ -62,6 +62,10 @@ def recommendItemsAndLocations():
         # loading environment variables; this should only have to happen once but try doing this before using them again if it causes issues
         load_dotenv()
         
+        # TEST: printing request body
+        print("REQUEST BODY:")
+        print(request.json)
+
         # making database object so that db credentials only have to be loaded once
         db = Database.Database()
 
