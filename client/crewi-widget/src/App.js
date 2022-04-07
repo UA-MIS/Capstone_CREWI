@@ -1,26 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import './App.css';
 
-// Render each post
-function renderPost(post){
-  const { data: { title, url, author, id } } = post
-  const authorUrl = `https://www.reddit.com/u/${author}`
-
-  return (
-    <div className="reddit_widget__post" key={id}>
-      <div className="reddit_widget__posted_by">
-        posted by <a href={authorUrl} className="reddit_widget__posted_by" target="_blank" rel="noopener noreferrer">u/{author}</a>
-      </div>
-      <a href={url} className="reddit_widget__title" target="_blank" rel="noopener noreferrer">{title}</a>
-    </div>
-  )
-}
-
-// Filter, since reddit always returns stickied posts up top
-function nonStickiedOnly(post){
-  return !post.data.stickied
-}
-
 function App({ domElement }) {
     //these happen once no matter what; they will not run again
     const [username, setUsername] = useState("");
@@ -56,6 +36,8 @@ function App({ domElement }) {
         
         // for testing the deployed hosting
         fetch(`https://crewi-engine.herokuapp.com/recommendation/`, {
+        // // for testing the local hosting
+        // fetch(`http://localhost:8000/recommendation/`, {            
             // GET can't take a request body, apparently
             method: "POST",
             headers: {
@@ -220,20 +202,20 @@ function App({ domElement }) {
                 // if something goes wrong, display fail
                 setStatus("fail");
             }
-        }
-
-        // time slot needs to be reset after each request so that loading time will be re-attempted
-        
+        }        
     }
 
+    // if the order button is clicked, redirect to whatever that is
     const clickOrder = () =>{
         window.location.href = orderLink;
     }
 
+    // when clicking the location toast, copy it to clipboard
     const copyLocation = location => {
         navigator.clipboard.writeText(location);
     }
 
+    // showing the best location toast
     const showBest = () => {
         // Get the snackbar DIV
         var x = document.getElementById("bestSnackbar");
@@ -250,6 +232,7 @@ function App({ domElement }) {
         }, 3000);
     }
 
+    // showing the closest location toast
     const showClosest = () => {
         // Get the snackbar DIV
         var x = document.getElementById("closestSnackbar");
@@ -266,6 +249,7 @@ function App({ domElement }) {
         }, 3000);
     }
 
+    // showing the most recent location toast
     const showRecent = () => {
         // Get the snackbar DIV
         var x = document.getElementById("recentSnackbar");
@@ -282,6 +266,7 @@ function App({ domElement }) {
         }, 3000);
     }
 
+    // showing the status message toast
     const showStatus = () => {
         // Get the snackbar DIV
         var x = document.getElementById("statusSnackbar");
@@ -352,7 +337,7 @@ function App({ domElement }) {
 
     else if (status == "no-time")
     {
-        //I think here we would want to display username if the end user has enetered it
+        //shows radio buttons for morning, afternoon, and night
         return(
             <div className='widgetBox boxShadowImitation' style={{
                 backgroundImage: `none`}}>
@@ -410,7 +395,7 @@ function App({ domElement }) {
 
     else if (status == "success")
     {
-        // location for showing status
+        // if there's a status message, make the button and toast for it
         let statusHtml;
         if (statusMessage) {
             statusHtml = (<div>
@@ -462,6 +447,7 @@ function App({ domElement }) {
             // </div>)
         }
 
+        // the main widget display HTML
         return(
             <div id="widget" className='widgetBox boxShadowImitation' style={{
                 backgroundImage: `url(${imgUrl})`
@@ -501,11 +487,6 @@ function App({ domElement }) {
             </div>
         )
     }
-
-    // may want to add more nuances, like having messages for showing location/time failure on the success display or something
-
-  
- 
 }
 
 export default App;
