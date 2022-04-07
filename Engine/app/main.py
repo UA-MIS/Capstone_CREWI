@@ -47,6 +47,10 @@ def recommendItemsAndLocations():
     print("\n\n\nSTARTING NEW REQUEST AT " + str(datetime.datetime.now()))
 
     printFormatting.printSuccess("Recommendation request received")
+    
+    # TEST: printing request body
+    print("REQUEST BODY:")
+    print(request.json)
 
     # this is the global status array; it needs to be in this scope in case making the request fails
     # do not initialize it again, the Status object is basically a singleton
