@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 
-function Widget(props) {
+function WidgetEmbedded(props) {
     useEffect(() => {
         if (document.querySelector(".crewi_widget")) {
             const parent = document.querySelector(".crewi-embed");
@@ -16,7 +16,7 @@ function Widget(props) {
 
         const jsScript = document.createElement("script");
         jsScript.setAttribute("class", "crewi_jsScript");
-        jsScript.setAttribute("src", "https://cdn.jsdelivr.net/gh/stward1/staticFileTest/static/js/main.239be685.js");
+        jsScript.setAttribute("src", "https://cdn.jsdelivr.net/gh/stward1/staticFileTest/static/js/main.8f770fa3.js");
         document.getElementsByClassName("crewi-embed")[0].appendChild(jsScript);
 
         const link = document.createElement("link");
@@ -38,4 +38,4 @@ function Widget(props) {
         );
 }
 
-export default Widget;
+export default WidgetEmbedded;

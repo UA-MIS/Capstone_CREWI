@@ -3,9 +3,9 @@ import HeaderComponent from './HeaderComponent';
 import NavbarComponent from './NavbarComponent';
 import FooterComponent from './FooterComponent';
 import LoginComponent from './LoginComponent';
-import Widget from './Widget';
-import Button from 'react-bootstrap/Button';
-import { Grid, GridItem, Box, Container } from '@chakra-ui/react'
+import { Grid, Box, Container } from '@chakra-ui/react'
+import WidgetIntegrated from './WidgetIntegrated';
+import WidgetEmbedded from './WidgetEmbedded';
 
 //this class is going to be our main parent component for the one-page
 export default class MainComponent extends Component {
@@ -46,7 +46,10 @@ export default class MainComponent extends Component {
                     <Box paddingTop='30'> */}
                         {/* the widget just needs a username input, which is taken straight from this state */}
                         <Box>
-                            <Widget username={this.state.username} orderLink="https://www.chipotle.com/"/>
+                            {/* "Embedded" means the widget is being embedded from the crewi-widget React app; use this for testing actual embedding of the widget */}
+                            <WidgetEmbedded username={this.state.username} orderLink="https://www.chipotle.com/"/>
+                            {/* "Integrated" means the widget is just another component; this is fine for development, but is dissimilar to actual use */}
+                            {/* <WidgetIntegrated username={this.state.username} orderLink="https://www.chipotle.com/"/> */}
                         </Box>
                     {/* </Box>
                 </Container> */}
