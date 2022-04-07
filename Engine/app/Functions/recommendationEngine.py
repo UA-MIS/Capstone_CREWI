@@ -86,6 +86,11 @@ def recommendItems(userRequest, db):
         # at this point, transactions contains ordered transactions from the user, then ordered from other users, all matching day part
         transactions.extend(db.loadOtherTransactions(userRequest, remainder))
 
+        # TEST: printing transactions
+        print("TRANSACTIONS:")
+        for transaction in transactions:
+            print(transaction)
+
         # if fewer than preferred transactions were loaded (because not enough were in the time slot), add an issue
         if (len(transactions) < int(os.environ.get('Transaction_Count'))):
             printFormatting.printWarning("Using fewer transactions than requested in configuration")

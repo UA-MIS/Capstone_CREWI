@@ -38,3 +38,7 @@ class RecommendationRequest:
             printFormatting.printError(str(e))
             globalStatus.addFail("REQUEST_INIT_FAIL")
             raise e
+
+    # allows the request information to be printed, useful for debugging
+    def __str__(self):
+        return "Username: " + self.username + "User ID: " + str(self.userId) + "\tTime: " + str(self.time) + "\tTime slot: " + self.timeSlot + "\tLatitude: " + str(self.latitude) + "\tLongitude: " + str(self.longitude)
