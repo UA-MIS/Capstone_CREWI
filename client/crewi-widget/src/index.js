@@ -7,7 +7,7 @@ import reportWebVitals from './reportWebVitals';
 // Refer to this article https://javascriptpros.com/creating-react-widgets-embedded-anywhere/
 // Finding all the widget divs
 const WidgetDivs = document.querySelectorAll('.crewi_widget');
-console.log(WidgetDivs);
+
 WidgetDivs.forEach(Div => {
   ReactDOM.render(
     <React.StrictMode>
