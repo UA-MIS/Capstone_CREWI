@@ -19,7 +19,7 @@ function WidgetEmbedded(props) {
 
         const jsScript = document.createElement("script");
         jsScript.setAttribute("class", "crewi_jsScript");
-        jsScript.setAttribute("src", "https://cdn.jsdelivr.net/gh/stward1/crewiStaticFiles/static/js/main.8f770fa3.js");
+        jsScript.setAttribute("src", "https://cdn.jsdelivr.net/gh/stward1/crewiStaticFiles/static/js/main.a9ffa889.js");
         document.getElementsByClassName("crewi-embed")[0].appendChild(jsScript);
 
         const link = document.createElement("link");
