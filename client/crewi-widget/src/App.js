@@ -45,8 +45,15 @@ function App({ domElement }) {
 
     // fetches the recommendation, might need to be async? doesn't look like it does at the moment
     const fetchRecommendation = function(username, time, timeSlot, latitude, longitude) {
-        // for local testing use this:
-        // fetch(`http://localhost:8000/recommendation/`, {
+        // TEST: logging out the engine inputs
+        console.log({
+            username: username,
+            time: time,
+            timeSlot: timeSlot,
+            latitude: latitude,
+            longitude: longitude
+        });
+        
         // for testing the deployed hosting
         fetch(`https://crewi-engine.herokuapp.com/recommendation/`, {
             // GET can't take a request body, apparently
@@ -92,9 +99,10 @@ function App({ domElement }) {
     //our first attempt at loading in time; it works, but we should probably reformat the time a little
     //if this fails, the exception will be caught in requestRec
     const loadCurrentTime = function() {
+
+        // TEST: uncomment this to break time functionality
         // throw 'exception'
-        // I'd like to walk through this at some point to make sure edge cases are covered
-        // return date + " " + localTime;
+
         Number.prototype.padLeft = function(base,chr){
             var  len = (String(base || 10).length - String(this).length)+1;
             return len > 0? new Array(len).join(chr || '0')+this : this;
