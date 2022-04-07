@@ -23,44 +23,27 @@
     border:2px solid #000000;
   }
 
-  /* .myClass {
-    background-image: url("https://www.seriouseats.com/thmb/WuQHPeJsuv4oA0nZJCggPzfLeAk=/735x0/__opt__aboutcom__coeus__resources__content_migration__serious_eats__seriouseats.com__recipes__images__2012__07__20120730-chick-fil-a-food-lab-primary-5765bd14d6d64815ba12a7bd7f2f4e02.jpg");
-    background-size: cover;
-    background-repeat: no-repeat;
-    background-position: center center;
-} */
-
 .widgetBox {
   position: relative;
   user-select: none;
-  /* min-height: 20rem;
-  height: 30%; */
-  /* width: 30%; */
-  /* aspect-ratio: 4/3; */
   min-height: 300px;
   max-width: 500px;
   font-size: large;
-  /* background-image: url("https://i.imgur.com/p3JG83p.png"); */
   background-size: 150% 200%;
   background-repeat: no-repeat;
   background-position: center;
   border:1px solid #dfdfdf;
-  /* border-radius: 50px; */
-  /* box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19), 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19); */
   text-align: center;
   padding-top: 3rem!important;
 }
 
 .widgetText {
-  
-  /* font-family: sans-serif; */
   font-size: calc(10px + 1vmax);
   color: rgb(255, 255, 255);
   text-shadow: 2px 2px 20px black, 2px 2px 20px black, 2px 2px 20px black, 2px 2px 20px black;
 }
 
 .orderText {
-  /* font: small-caps bold 24px/1 sans-serif; */
   font-size: calc(10px + 2.5vmax);
   color: #0d70dc;
   text-shadow: 2px 2px 20px black, 2px 2px 20px black, 2px 2px 20px black, 2px 2px 20px black;
@@ -134,13 +117,12 @@
   user-select: all !important;
 }
 
-/* The snackbar - position it at the bottom and in the middle of the screen */
 #bestSnackbar {
   display: none;
   min-width: 50%; /* Set a default minimum width */
   max-width: 70%;
   border-radius: 0.5rem !important;
-  background-color: #06375f; /* Black background color */
+  background-color: #06375f; /* Blueish background color */
   color: #fff; /* White text color */
   text-align: center; /* Centered text */
   border-radius: 2px; /* Rounded borders */

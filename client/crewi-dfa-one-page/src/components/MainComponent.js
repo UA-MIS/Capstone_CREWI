@@ -7,10 +7,10 @@ import { Grid, Box, Container } from '@chakra-ui/react'
 import WidgetIntegrated from './WidgetIntegrated';
 import WidgetEmbedded from './WidgetEmbedded';
 
-//this class is going to be our main parent component for the one-page
+//this class is our main parent component for the one-page
 export default class MainComponent extends Component {
 
-    //this is the top-level state; we can put more stuff in here as needed
+    //top-level state; we can put more stuff in here as needed
     state = {
         username: ""
     }

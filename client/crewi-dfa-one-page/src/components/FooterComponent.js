@@ -4,7 +4,8 @@ import Navbar from 'react-bootstrap/Navbar';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faYoutube, faFacebook, faTwitter, faInstagram } from "@fortawesome/free-brands-svg-icons";
 
-export default class Header extends Component {
+// this is the one-page header
+export default class Footer extends Component {
 
     render() {
         return(

@@ -4,19 +4,23 @@ import React, { useEffect } from 'react'
 function WidgetEmbedded(props) {
     // runs whenever username is changed
     useEffect(() => {
-        // 
+        // prevents making a new widget every time username is updated
         if (document.querySelector(".crewi_widget")) {
             const parent = document.querySelector(".crewi-embed");
             // apparently this doesn't remove event handlers or something? whatever lol
             parent.innerHTML = "";
         }
 
+        // making the widget div
         const div = document.createElement("div");
         div.setAttribute("class", "crewi_widget");
         div.setAttribute("username", props.username);
         div.setAttribute("orderLink", props.orderLink);
         document.getElementsByClassName("crewi-embed")[0].appendChild(div);
 
+
+        // adding the scripts and css as needed; double check the src/href paths and make sure they match the files listed in the terminal after npm run build
+        // sometimes the JS file changes, so you might have to update it periodically here and in public/index.html
         const jsScript = document.createElement("script");
         jsScript.setAttribute("class", "crewi_jsScript");
         jsScript.setAttribute("src", "https://cdn.jsdelivr.net/gh/stward1/crewiStaticFiles/static/js/main.a9ffa889.js");
@@ -34,6 +38,7 @@ function WidgetEmbedded(props) {
         document.getElementsByClassName("crewi-embed")[0].appendChild(script);
         }, [props.username]);
 
+        // returning the widget inside a section
         return (
         <section className="crewiWidget">
             <div className="crewi-embed"></div>
