@@ -1,5 +1,32 @@
 import React, { useEffect, useState } from 'react'
 
+function Widget(props) {
+    useEffect(() => {
+        const div = document.createElement("div");
+        div.setAttribute("class", "crewi_widget");
+        div.setAttribute("username", props.username);
+        div.setAttribute("orderLink", props.orderLink);
+        document.getElementsByClassName("reddit-embed")[0].appendChild(div);
+
+        const link = document.createElement("link");
+        link.setAttribute("src", "https://giologist.github.io/article-react-reddit-widget/index.css");
+        link.setAttribute("rel", "stylesheet");
+        document.getElementsByClassName("reddit-embed")[0].appendChild(link);
+
+        const script = document.createElement("script");
+        script.setAttribute("src", "https://giologist.github.io/article-react-reddit-widget/index.js");
+        document.getElementsByClassName("reddit-embed")[0].appendChild(script);
+        }, [props.subreddit]);
+
+        return (
+        <section className="redditWidget">
+            <div className="reddit-embed"></div>
+        </section>
+        );
+}
+
+export default Widget;
+
 const Widget = (props) => {
     //these happen once no matter what; they will not run again
     const [username, setUsername] = useState("");
