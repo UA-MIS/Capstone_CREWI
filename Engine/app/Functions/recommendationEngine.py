@@ -87,9 +87,12 @@ def recommendItems(userRequest, db):
         transactions.extend(db.loadOtherTransactions(userRequest, remainder))
 
         # TEST: printing transactions
-        print("TRANSACTIONS:")
-        for transaction in transactions:
-            print(transaction)
+        try:
+            print("TRANSACTIONS:")
+            for transaction in transactions:
+                print(transaction)
+        except:
+            print("TEST LOG: Unable to print transactions...")
 
         # if fewer than preferred transactions were loaded (because not enough were in the time slot), add an issue
         if (len(transactions) < int(os.environ.get('Transaction_Count'))):
