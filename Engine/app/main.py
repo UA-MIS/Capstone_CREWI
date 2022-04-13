@@ -49,13 +49,19 @@ def home_view():
 # this function returns the recommended items and locations; refer to documentation or log the JSON return to see the structure
 def recommendItemsAndLocations():
     # TEST: printing out new request message with line breaks for clarity
-    print("\n\n\nSTARTING NEW REQUEST AT " + str(datetime.datetime.now()))
+    try:
+        print("\n\n\nSTARTING NEW REQUEST AT " + str(datetime.datetime.now()))
+    except:
+        print("TEST LOG: Unable to load current datetime...")
 
     printFormatting.printSuccess("Recommendation request received")
     
     # TEST: printing request body
-    print("REQUEST BODY:")
-    print(request.json)
+    try:
+        print("REQUEST BODY:")
+        print(request.json)
+    except:
+        print("TEST LOG: Unable to parse request JSON body...")
 
     # this is the global status array; it needs to be in this scope in case making the request fails
     # do not initialize it again, the Status object is basically a singleton
@@ -66,10 +72,6 @@ def recommendItemsAndLocations():
     try:
         # loading environment variables; this should only have to happen once but try doing this before using them again if it causes issues
         load_dotenv()
-        
-        # TEST: printing request body
-        print("REQUEST BODY:")
-        print(request.json)
 
         # making database object so that db credentials only have to be loaded once
         db = Database.Database()
@@ -90,8 +92,11 @@ def recommendItemsAndLocations():
         items = recommendationEngine.recommendItems(userRequest, db)
 
         # TEST: printing the request information
-        print("REQUEST INFORMATION:")
-        print(userRequest)
+        try:
+            print("REQUEST INFORMATION:")
+            print(userRequest)
+        except:
+            print("TEST LOG: Unable to print user request info...")
 
         # returns the statuses and recommendations; recommendations[0] will be the top recommendation
         return jsonify({
