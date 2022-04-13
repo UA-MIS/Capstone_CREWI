@@ -6,6 +6,7 @@ const WidgetIntegrated = (props) => {
     //these happen once no matter what; they will not run again
     const [username, setUsername] = useState("");
     const [orderLink, setOrderLink] = useState("");
+    const [failMessage, setFailMessage] = useState("");
     const [status, setStatus] = useState("loading");
     const [timeSlot, setTimeSlot] = useState("");
     const [imgUrl, setImgUrl] = useState("");
@@ -121,6 +122,12 @@ const WidgetIntegrated = (props) => {
     useEffect(() => {
         setUsername(props.username);
         setOrderLink(props.orderLink);
+
+        if (props.failMessage) {
+            setFailMessage(props.failMessage);
+        } else {
+            setFailMessage("Recommendation failed");
+        }
     })
 
     // runs whenever radio buttons are clicked
@@ -460,11 +467,9 @@ const WidgetIntegrated = (props) => {
         return(
             <div className='widgetBox boxShadowImitation' style={{
                 backgroundImage: `none`}}>
-                <span className='widgetText'>
-                    Recommendation failed
+                <span className='widgetText' style={{fontSize: "1.5rem"}}>
+                    {failMessage}
                 </span>
-                <br/>
-                <br/>
                 <br/>
                 <br/>
                 <button className='widgetButton' style={{

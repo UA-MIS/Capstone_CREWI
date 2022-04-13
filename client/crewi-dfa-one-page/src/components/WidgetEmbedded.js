@@ -16,6 +16,7 @@ function WidgetEmbedded(props) {
         div.setAttribute("class", "crewi_widget");
         div.setAttribute("username", props.username);
         div.setAttribute("orderLink", props.orderLink);
+        div.setAttribute("failMessage", props.failMessage);
         document.getElementsByClassName("crewi-embed")[0].appendChild(div);
 
 

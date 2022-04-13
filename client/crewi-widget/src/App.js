@@ -6,6 +6,7 @@ function App({ domElement }) {
     //these happen once no matter what; they will not run again
     const [username, setUsername] = useState("");
     const [orderLink, setOrderLink] = useState("");
+    const [failMessage, setFailMessage] = useState("");
     const [status, setStatus] = useState("loading");
     const [timeSlot, setTimeSlot] = useState("");
     const [imgUrl, setImgUrl] = useState("");
@@ -129,9 +130,14 @@ function App({ domElement }) {
     //this runs whenever state or props are updated; it updates token so that the useEffect above will run
     //props are updated when the button is clicked bc it will update the main state, etc.
     useEffect(() => {
-      domElement.getAttribute("data-subreddit")
         setUsername(domElement.getAttribute("username"));
         setOrderLink(domElement.getAttribute("orderLink"));
+        
+        if (domElement.getAttribute("failMessage")) {
+            setFailMessage(domElement.getAttribute("failMessage"));
+        } else {
+            setFailMessage("Recommendation failed");
+        }
     })
 
     // runs whenever radio buttons are clicked
@@ -475,11 +481,9 @@ function App({ domElement }) {
         return(
             <div className='widgetBox boxShadowImitation' style={{
                 backgroundImage: `none`}}>
-                <span className='widgetText'>
-                    Recommendation failed
+                <span className='widgetText' style={{fontSize: "1.5rem"}}>
+                    {failMessage}
                 </span>
-                <br/>
-                <br/>
                 <br/>
                 <br/>
                 <button className='widgetButton' style={{

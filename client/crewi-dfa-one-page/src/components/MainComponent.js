@@ -33,7 +33,7 @@ export default class MainComponent extends Component {
                 <br/>
                 {/* login component is being given the handleUpdate function under the name updateState, which will be referenced in its class */}
                 {/* The grid contains the login component and the widget compnent. Each are called inside the box */}
-                <Grid templateColumns='repeat(2,1fr)' gap={0} paddingTop='100px' paddingBottom='100px'>
+                <Grid templateColumns='repeat(2,1fr)' gap={0} paddingTop='100px' paddingBottom='100px' minChildWidth="200px">
                 <Container className='App-login p-3 mb-5 bg-white' minHeight='300px' maxWidth="500px" borderStyle='solid'>
                     <Box paddingTop='0%'>
                         {/* we use a non-unique ID here, so be careful about making multiple login components */}
@@ -47,9 +47,9 @@ export default class MainComponent extends Component {
                         {/* the widget just needs a username input, which is taken straight from this state */}
                         <Box>
                             {/* "Embedded" means the widget is being embedded from the crewi-widget React app; use this for testing actual embedding of the widget */}
-                            <WidgetEmbedded username={this.state.username} orderLink="https://www.chipotle.com/"/>
+                            {/* <WidgetEmbedded username={this.state.username} orderLink="https://www.chipotle.com/" failMessage="Our system is unavailable right now. We recommend a Dude-fil-A sandwich!"/> */}
                             {/* "Integrated" means the widget is just another component; this is fine for development, but is dissimilar to actual use */}
-                            {/* <WidgetIntegrated username={this.state.username} orderLink="https://www.chipotle.com/"/> */}
+                            <WidgetIntegrated username={this.state.username} orderLink="https://www.chipotle.com/" failMessage="Our system is unavailable right now. We recommend a Dude-fil-A sandwich!"/>
                         </Box>
                     {/* </Box>
                 </Container> */}
