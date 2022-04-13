@@ -47,9 +47,9 @@ export default class MainComponent extends Component {
                         {/* the widget just needs a username input, which is taken straight from this state */}
                         <Box>
                             {/* "Embedded" means the widget is being embedded from the crewi-widget React app; use this for testing actual embedding of the widget */}
-                            {/* <WidgetEmbedded username={this.state.username} orderLink="https://www.chipotle.com/" failMessage="Our system is unavailable right now. We recommend a Dude-fil-A sandwich!"/> */}
+                            <WidgetEmbedded username={this.state.username} orderLink="https://www.chipotle.com/" failMessage="Our system is unavailable right now. We recommend a Dude-fil-A sandwich!"/>
                             {/* "Integrated" means the widget is just another component; this is fine for development, but is dissimilar to actual use */}
-                            <WidgetIntegrated username={this.state.username} orderLink="https://www.chipotle.com/" failMessage="Our system is unavailable right now. We recommend a Dude-fil-A sandwich!"/>
+                            {/* <WidgetIntegrated username={this.state.username} orderLink="https://www.chipotle.com/" failMessage="Our system is unavailable right now. We recommend a Dude-fil-A sandwich!"/> */}
                         </Box>
                     {/* </Box>
                 </Container> */}
