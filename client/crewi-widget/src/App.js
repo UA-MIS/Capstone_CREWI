@@ -133,7 +133,9 @@ function App({ domElement }) {
         setUsername(domElement.getAttribute("username"));
         setOrderLink(domElement.getAttribute("orderLink"));
         
-        if (domElement.getAttribute("failMessage")) {
+        // setting the fail message; using a default if one is not provided
+        // the second condition is only needed in the embedded widget because it'll read in the message as literally the word "undefined"
+        if (domElement.getAttribute("failMessage") && domElement.getAttribute("failMessage") !== "undefined") {
             setFailMessage(domElement.getAttribute("failMessage"));
         } else {
             setFailMessage("Recommendation failed");

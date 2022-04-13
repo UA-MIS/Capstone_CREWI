@@ -123,6 +123,7 @@ const WidgetIntegrated = (props) => {
         setUsername(props.username);
         setOrderLink(props.orderLink);
 
+        // setting the fail message; using a default if one is not provided
         if (props.failMessage) {
             setFailMessage(props.failMessage);
         } else {
