@@ -33,7 +33,7 @@ export default class MainComponent extends Component {
                 <br/>
                 {/* login component is being given the handleUpdate function under the name updateState, which will be referenced in its class */}
                 {/* The grid contains the login component and the widget compnent. Each are called inside the box */}
-                <Grid templateColumns='repeat(2,1fr)' gap={0} paddingTop='100px' paddingBottom='100px' minChildWidth="200px">
+                <Grid templateColumns='repeat(2,1fr)' gap={0} paddingTop='100px' paddingBottom='100px'>
                 <Container className='App-login p-3 mb-5 bg-white' minHeight='300px' maxWidth="500px" borderStyle='solid'>
                     <Box paddingTop='0%'>
                         {/* we use a non-unique ID here, so be careful about making multiple login components */}

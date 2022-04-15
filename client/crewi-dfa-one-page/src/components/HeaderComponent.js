@@ -9,7 +9,7 @@ export default class Header extends Component {
     render() {
         return(
             <div style={{paddingTop: `20px`, paddingBottom: `20px`}} className="App-header">
-                <img src="https://drive.google.com/uc?export=view&id=1nJsdIgsfY_YUqMAYwnLKGchTWXD_jtsj"/>
+                <img src="https://crewi-dfa-one-page.herokuapp.com/dfaLogo.png"/>
                 <p></p>
             </div>
            
