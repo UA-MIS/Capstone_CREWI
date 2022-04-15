@@ -323,7 +323,7 @@ function App({ domElement }) {
     {
         return(
             <div className='widgetLoading widgetBox boxShadowImitation' style={{
-                backgroundImage: `url(https://drive.google.com/uc?export=view&id=1jOKIa9urkCFsa6OGGf8Hrd8DROPzkmfa)`
+                backgroundImage: `url(/loadingAnimation.gif)`
             }}>
             </div>        
         )
@@ -333,7 +333,7 @@ function App({ domElement }) {
     {
         return(
             <div className='widgetLoading widgetBox boxShadowImitation' style={{
-                backgroundImage: `url(https://drive.google.com/uc?export=view&id=1jOKIa9urkCFsa6OGGf8Hrd8DROPzkmfa)`
+                backgroundImage: `url(/loadingAnimation.gif)`
             }}>
                 <span className='widgetText'>
                     Location unavailable

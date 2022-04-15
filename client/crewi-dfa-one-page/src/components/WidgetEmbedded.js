@@ -24,7 +24,7 @@ function WidgetEmbedded(props) {
         // sometimes the JS file changes, so you might have to update it periodically here and in public/index.html
         const jsScript = document.createElement("script");
         jsScript.setAttribute("class", "crewi_jsScript");
-        jsScript.setAttribute("src", "https://cdn.jsdelivr.net/gh/capstonecrewi/crewiStaticFiles/static/js/main.1b95d205.js");
+        jsScript.setAttribute("src", "https://cdn.jsdelivr.net/gh/capstonecrewi/crewiStaticFiles/static/js/main.b7d2e0e4.js");
         document.getElementsByClassName("crewi-embed")[0].appendChild(jsScript);
 
         const link = document.createElement("link");
