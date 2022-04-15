@@ -309,7 +309,7 @@ const WidgetIntegrated = (props) => {
     {
         return(
             <div className='widgetLoading widgetBox boxShadowImitation' style={{
-                backgroundImage: `url(/loadingAnimation.gif)`
+                backgroundImage: `url(https://drive.google.com/uc?export=view&id=1EEZ7JydK3G1W4rXwCtfgZj0HXrBWHbpr)`
             }}>
             </div>        
         )
@@ -319,7 +319,7 @@ const WidgetIntegrated = (props) => {
     {
         return(
             <div className='widgetLoading widgetBox boxShadowImitation' style={{
-                backgroundImage: `url(/loadingAnimation.gif)`
+                backgroundImage: `url(https://drive.google.com/uc?export=view&id=1EEZ7JydK3G1W4rXwCtfgZj0HXrBWHbpr)`
             }}>
                 <span className='widgetText'>
                     Location unavailable
