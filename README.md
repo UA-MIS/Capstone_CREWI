@@ -1,3 +1,13 @@
+### CLOSE-OUT UPDATE
+
+In our close-out meeting, we decided to make this repo public. This will not cause any issues, but it does mean updating the widget is much easier.
+
+Rather than needing to use the crewiStaticFiles repo, the widget static files can be accessed directly via this repo (because it is public). To implement this change, just update the CDN URLs in the embedded widget and public/index.html of the one-page. This change is particularly nice because it also means there's no need to push to the crewiStaticFiles repo when updating the widget. The instructions will be kept in the ReadMe for now in case access changes, but a future project team could remove that section of the documentation and delete the crewiStaticFiles repo if desired.
+
+
+
+
+
 ### Capstone_CREWI Codebase
 
 Before developing, be sure to watch and follow the setup video.
