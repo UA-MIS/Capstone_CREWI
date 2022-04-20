@@ -1,10 +1,13 @@
-### CLOSE-OUT UPDATE
+## CLOSE-OUT UPDATE
 
 In our close-out meeting, we decided to make this repo public. This will not cause any issues, but it does mean updating the widget is much easier.
 
 Rather than needing to use the crewiStaticFiles repo, the widget static files can be accessed directly via this repo (because it is public). To implement this change, just update the CDN URLs in the embedded widget and public/index.html of the one-page. This change is particularly nice because it also means there's no need to push to the crewiStaticFiles repo when updating the widget. The instructions will be kept in the ReadMe for now in case access changes, but a future project team could remove that section of the documentation and delete the crewiStaticFiles repo if desired.
 
-
+Here are the _current_ CDN URLs to access the static files. Note that these will be outdated whenever you rebuild the widget (read about changing that in the one-page ReadMe; the widget ReadMe explains how the CDN URLs are structured, refer to https://www.jsdelivr.com/?docs=gh for official documentation):
+Main JavaScript file: https://cdn.jsdelivr.net/gh/ua-mis/capstone_crewi/client/crewi-widget/build/static/js/main.fa50d1c2.js
+CSS file: https://cdn.jsdelivr.net/gh/ua-mis/capstone_crewi/client/crewi-widget/build/static/css/main.49542669.css
+Chunk JavaScript file: https://cdn.jsdelivr.net/gh/ua-mis/capstone_crewi/client/crewi-widget/build/static/js/787.d1453236.chunk.js
 
 
 
