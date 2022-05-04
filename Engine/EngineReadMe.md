@@ -5,6 +5,14 @@ This folder contains engine for the CREWI project.
 Make sure to refer to the setup video to get everything up and running for local testing.
 
 
+### Environment Variables
+
+There are three ways to get the environment variables that are referenced in the set-up video:
+1. Go to this UA Box link (which will require a UA log-in) and download the file (be sure to name it `.env`): https://alabama.box.com/s/ppldcpifoo139sje8l4y91qwch3afdv6
+2. Log into the engine Heroku server and copy the configuration variables from there
+3. Log into Google Drive with the Capstone Crewi gmail account and download the file from there (you may have to enable third-party cookies, and make sure to name it `.env`)
+
+
 ### Running the Engine Locally
 
 Once you've followed the setup instructions, running the engine locally should be fairly straightforward:
